@@ -32,7 +32,8 @@ The objective of this project was to design and build a simulated Managed Securi
 ### SOC Automation Architecture
 <br>
 <p align="center">
-  <img src="https://github.com/NgethaWachira/Building-a-Simulated-MSSP-Environment/blob/d6f0567d5d628fd04f89ef6e27e50da0d4d0a991/Images/camphor-clavis-soc-automation-architecture.png" width="700" />
+  <img src="https://github.com/NgethaWachira/Building-a-Simulated-MSSP-Environment/blob/dbae9e838715b43c27fad3a1e43ab101d7ef5d6a/Images/camphor-clavis-soc-automation-architecture.png" width="300" />
+  <img src="https://github.com/NgethaWachira/Building-a-Simulated-MSSP-Environment/blob/dbae9e838715b43c27fad3a1e43ab101d7ef5d6a/Images/camphor-clavis-full-system-overview.png" width="345" />
 </p>
 
 ### Steps
@@ -40,5 +41,5 @@ The objective of this project was to design and build a simulated Managed Securi
 - I registered the MSSP domain camphorclavis.com through Porkbun. At this stage, no web hosting or separate email hosting is required. The domain is primarily used for identity and Azure/Entra ID configuration, with Porkbun providing the required DNS management. The initial setup involves adding the TXT record provided by Entra ID to verify ownership of the domain. Later, if email services are required, Microsoft 365 can provide Exchange Online mailboxes using the verified domain, with the required MX, SPF, and DKIM records configured through Porkbun. Web hosting is optional and is not required for the MSSP lab.
 
 <p align="center">
-  <img src="https://github.com/NgethaWachira/Azure-Security-and-Simulation/blob/50030693511ae30bd53520e104dde01e51351ce0/Images/Subscription%20role%20assignment.PNG" width="700" />
+  <img src="https://github.com/NgethaWachira/Building-a-Simulated-MSSP-Environment/blob/7c13a36dc99858348b2d922175afad98630de39e/Images/1.png" width="700" />
 </p>
