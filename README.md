@@ -33,6 +33,7 @@ The objective of this project was to design and build a simulated Managed Securi
 </div>
 
 ### SOC Automation Architecture
+<br>
 <p align="center">
   <img src="https://github.com/NgethaWachira/Building-a-Simulated-MSSP-Environment/blob/d6f0567d5d628fd04f89ef6e27e50da0d4d0a991/Images/camphor-clavis-soc-automation-architecture.png" width="700" />
 </p>
