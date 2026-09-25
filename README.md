@@ -138,7 +138,7 @@ The broader aim was to deepen my practical understanding of how modern security 
 </p>
 
 ### Azure lighthouse delegation setup
-- The next step was to configure Azure Lighthouse so the MSSP tenant could access Customer 1’s Sentinel environment
+The next step was to configure Azure Lighthouse so the MSSP tenant could access Customer 1’s Sentinel environment
 #### Role definitions
 - We identified the built-in Azure roles required for the MSSP to work with Customer 1’s Sentinel environment. These included Microsoft Sentinel Contributor, Microsoft Sentinel Responder, and Reader. These roles were included in the Lighthouse delegation so the MSSP could access and manage the required Sentinel resources.
 
