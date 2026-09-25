@@ -207,6 +207,71 @@ The objective of this project was to design and build a simulated Managed Securi
   <img src="https://github.com/NgethaWachira/Building-a-Simulated-MSSP-Environment/blob/90d9d5db2d2a934f4d5840aafac83efca3987a04/Images/49.png" width="700" />
 </p>
 
+### Deployment option - consumption plan
+- The hosting option for the Customer 1 relay is Consumption. This matches the existing la-sentinel-relay in rg-triage-lab and the deployment pattern used for the MSSP pipeline. Consumption provides a fully managed, multi-tenant Logic App with pay-per-operation pricing, making it suitable for an incident relay that runs only when Sentinel incidents are created. 
+
+- We therefore created la-sentinel-relay-customer1 using the Consumption plan in rg-customer1-soc, alongside law-customer1, while keeping the centralized investigation logic in func-mssp-triage2.
+
+<p align="center">
+  <img src="https://github.com/NgethaWachira/Building-a-Simulated-MSSP-Environment/blob/7ae5b0eb564d44729636ea65c153b54cc6493227/Images/50.png" width="700" />
+</p>
+
+### Gap in the delegation scope
+- We identified that the Customer 1 subscription was missing the required Microsoft.Web and Microsoft.Logic resource providers, and the MSSP delegation did not include Logic App Contributor permissions. We therefore updated the existing Azure Lighthouse delegation template by adding the Logic App Contributor role alongside the existing Sentinel Contributor, Sentinel Responder, and Reader roles. 
+
+<p align="center">
+  <img src="https://github.com/NgethaWachira/Building-a-Simulated-MSSP-Environment/blob/7ae5b0eb564d44729636ea65c153b54cc6493227/Images/51.png" width="700" />
+</p>
+
+- This is a one-time subscription-level prerequisite that must be completed by the Customer 1 native administrator, CamphorCust@CamphorCustomer1.onmicrosoft.com. After registration, we can return to the MSSP account and continue creating the Logic App. The updated template was deployed to Camphor Customer 1 using the same mspOfferName, updating the existing delegation rather than creating a duplicate.
+
+<p align="center">
+  <img src="https://github.com/NgethaWachira/Building-a-Simulated-MSSP-Environment/blob/7ae5b0eb564d44729636ea65c153b54cc6493227/Images/52.png" width="700" />
+</p>
+
+- So to recap the full picture with both identities' correct roles:
+
+`CamphorCust@CamphorCustomer1.onmicrosoft.com (Customer 1's native admin) > publishes/updates the Lighthouse delegation template, and is the only one who can register resource providers (Microsoft.Web, Microsoft.Logic) on that subscription`
+
+`mssptriagelabke@outlook.com (our MSSP tenant) > is the one who receives that delegated access, and uses it to create the Logic App, configure the Sentinel trigger, and eventually run the automation`
+
+
+### Customer 1 logic app realy
+- At this stage, we deployed la-sentinel-relay-customer1 in rg-customer1-soc, using the Consumption plan in South Africa North, alongside the existing MSSP relay la-sentinel-relay. We can now proceed with configuring the Sentinel trigger on la-sentinel-relay-customer1 and select law-customer1 as the monitored workspace.
+
+<p align="center">
+  <img src="https://github.com/NgethaWachira/Building-a-Simulated-MSSP-Environment/blob/7ae5b0eb564d44729636ea65c153b54cc6493227/Images/53.png" width="700" />
+</p>
+
+### Selecting the sentinel trigger
+- In the Logic App designer, we selected the Microsoft Sentinel incident trigger. This is the appropriate trigger for the automation because the workflow is designed to start when a Sentinel incident is created and then send the incident to the centralized triage function for investigation. 
+
+- The Microsoft Sentinel alert trigger is intended for individual alerts, while Microsoft Sentinel entity is designed for entity-focused workflows. We therefore used Microsoft Sentinel incident and proceeded with the MSSP account mssptriagelabke@outlook.com to configure the connection and select law-customer1 as the monitored workspace.
+
+<p align="center">
+  <img src="https://github.com/NgethaWachira/Building-a-Simulated-MSSP-Environment/blob/7ae5b0eb564d44729636ea65c153b54cc6493227/Images/54.png" width="700" />
+</p>
+
+### Cinfiguring the sentinel connection
+- For the Microsoft Sentinel incident trigger, we selected OAuth authentication and used the MSSP analyst account mssptriagelabke@outlook.com. The Tenant ID was left blank or set to the MSSP tenant ID 2947e56e-1901-4f69-9fc0-f9c8a7ce2cc5, since the connection authenticates the MSSP account while Azure Lighthouse provides access to the delegated Customer 1 resources. 
+
+<p align="center">
+  <img src="https://github.com/NgethaWachira/Building-a-Simulated-MSSP-Environment/blob/7ae5b0eb564d44729636ea65c153b54cc6493227/Images/55.png" width="700" />
+</p>
+
+- The connection completed successfully, showing “Connected to live.com#mssptriagelabke@outlook.com”, confirming that the OAuth connection was established with the correct account. We could then continue to the trigger parameters and select Camphor Customer 1 → rg-customer1-soc → law-customer1.
+
+<p align="center">
+  <img src="https://github.com/NgethaWachira/Building-a-Simulated-MSSP-Environment/blob/7ae5b0eb564d44729636ea65c153b54cc6493227/Images/56.png" width="700" />
+</p>
+
+
+
+
+
+
+
+
 
 
 
