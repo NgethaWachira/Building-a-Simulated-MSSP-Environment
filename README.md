@@ -252,24 +252,36 @@ The objective of this project was to design and build a simulated Managed Securi
   <img src="https://github.com/NgethaWachira/Building-a-Simulated-MSSP-Environment/blob/7ae5b0eb564d44729636ea65c153b54cc6493227/Images/54.png" width="700" />
 </p>
 
-### Cinfiguring the sentinel connection
+### Configuring the sentinel connection
 - For the Microsoft Sentinel incident trigger, we selected OAuth authentication and used the MSSP analyst account mssptriagelabke@outlook.com. The Tenant ID was left blank or set to the MSSP tenant ID 2947e56e-1901-4f69-9fc0-f9c8a7ce2cc5, since the connection authenticates the MSSP account while Azure Lighthouse provides access to the delegated Customer 1 resources. 
 
 <p align="center">
   <img src="https://github.com/NgethaWachira/Building-a-Simulated-MSSP-Environment/blob/7ae5b0eb564d44729636ea65c153b54cc6493227/Images/55.png" width="700" />
 </p>
 
-- The connection completed successfully, showing “Connected to live.com#mssptriagelabke@outlook.com”, confirming that the OAuth connection was established with the correct account. We could then continue to the trigger parameters and select Camphor Customer 1 → rg-customer1-soc → law-customer1.
+- The connection completed successfully, showing “Connected to live.com#mssptriagelabke@outlook.com”, confirming that the OAuth connection was established with the correct account. We could then continue to the trigger parameters and select Camphor Customer 1 > rg-customer1-soc > law-customer1.
 
 <p align="center">
   <img src="https://github.com/NgethaWachira/Building-a-Simulated-MSSP-Environment/blob/7ae5b0eb564d44729636ea65c153b54cc6493227/Images/56.png" width="700" />
 </p>
 
+### Preparing the HTTP action
+- Because the newer Microsoft Sentinel trigger does not require the subscription, resource group, or workspace to be selected during trigger configuration, the trigger setup was completed once the OAuth connection showed “Connected to live.com#mssptriagelabke@outlook.com”. We then moved to the HTTP action, which will send the incident data from la-sentinel-relay-customer1 to the existing func-mssp-triage2 Function App. 
 
+- Customer 1’s workspace ID was retrieved as 1c913899-5837-4bcd-9eda-316fddf4dff8. The remaining value needed to complete the HTTP request is the SentinelTriage function key, which was retrieved from Cloud Shell by telling Azure CLI which Azure subscription to work in before running the command.
 
+<p align="center">
+  <img src="https://github.com/NgethaWachira/Building-a-Simulated-MSSP-Environment/blob/438888442273abb2bc4e7a1927cd3fc78ce7f2af/Images/57.png" width="700" />
+</p>
 
+### Configuring the HTTP action
+- We configured the HTTP action in la-sentinel-relay-customer1 to send a POST request to the existing func-mssp-triage2 Function App. The request uses the SentinelTriage function endpoint, with Content-Type: application/json, and passes the Sentinel incident ID, Customer 1 workspace ID 1c913899-5837-4bcd-9eda-316fddf4dff8, customer identifier customer1, and the triggering alert rule name in the request body. 
 
+- The Logic App was then saved so it could forward Customer 1 incidents to the centralized MSSP triage function.
 
+<p align="center">
+  <img src="https://github.com/NgethaWachira/Building-a-Simulated-MSSP-Environment/blob/438888442273abb2bc4e7a1927cd3fc78ce7f2af/Images/59.png" width="700" />
+</p>
 
 
 
