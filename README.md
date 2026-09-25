@@ -53,10 +53,14 @@ The objective of this project was to design and build a simulated Managed Securi
   <img src="https://github.com/NgethaWachira/Building-a-Simulated-MSSP-Environment/blob/8548bbb1506cff6b49917caa373a64dab2075365/Images/6.png" width="350" />
 </p>
 
+### Raised a support ticket
 - A Microsoft account, camphor.customer1@outlook.com, was created to represent Customer 1, using a separate browser profile and a Netherlands VPN endpoint to simulate an independent customer identity and sign-in location. Initial Azure portal sign-ins repeatedly failed with an MSAL state_mismatch error caused by browser session and cookie conflicts when using multiple Microsoft accounts.
-- The issue was resolved by clearing cookies for login.microsoftonline.com and login.live.com, followed by using a dedicated browser profile for each identity, which prevented the issue from recurring.
 
+- Microsoft Support reviewed the account and removed the restriction that was preventing the creation of an Azure subscription. This allowed the Customer 1 account to complete the Azure signup process and provision its own Default Directory (tenant) and subscription. The subscription was initially empty, with no Azure resources deployed, providing a clean starting point for building the simulated customer environment.
 
+<p align="center">
+  <img src="https://github.com/NgethaWachira/Building-a-Simulated-MSSP-Environment/blob/922cf992e16d4d729f938878a53e75dcd1439f4c/Images/6a.png" width="700" />
+</p>
 
 
 
