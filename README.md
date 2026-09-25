@@ -1,7 +1,9 @@
 # Building-a-Simulated-MSSP-Environment
 
 ## Objective
-The objective of this project was to design and build a simulated Managed Security Service Provider (MSSP) environment from the ground up. I wanted hands-on experience with the multi-tenant Microsoft security stack, including Azure Lighthouse, Microsoft Sentinel, Microsoft Defender XDR and Entra ID Governance, the same tools real MSSPs use to protect multiple client organizations. Alongside the environment, I set out to create an AI-powered SOC automation pipeline using Claude. When a Sentinel incident fires, the pipeline runs KQL investigations, reaches an evidence-based verdict and escalates suspicious findings to a ticketing system for client follow-up. The project covered the full lifecycle of an MSSP engagement: onboarding a client tenant, setting up cross-tenant delegated access, tuning detection rules, enrolling devices into Intune and Defender for Endpoint, and building a scalable model for granting analysts response permissions. The broader aim was to deepen my practical understanding of how modern security operations work, and to explore how AI can support analysts in handling incidents more efficiently.
+The objective of this project was to design and build a simulated Managed Security Service Provider (MSSP) environment from the ground up. I wanted hands-on experience with the multi-tenant Microsoft security stack, including Azure Lighthouse, Microsoft Sentinel, Microsoft Defender XDR and Entra ID Governance, the same tools real MSSPs use to protect multiple client organizations. </br> </br> 
+Alongside the environment, I set out to create an AI-powered SOC automation pipeline using Claude. When a Sentinel incident fires, the pipeline runs KQL investigations, reaches an evidence-based verdict and escalates suspicious findings to a ticketing system for client follow-up. The project covered the full lifecycle of an MSSP engagement: onboarding a client tenant, setting up cross-tenant delegated access, tuning detection rules, enrolling devices into Intune and Defender for Endpoint, and building a scalable model for granting analysts response permissions. <br></br> 
+The broader aim was to deepen my practical understanding of how modern security operations work, and to explore how AI can support analysts in handling incidents more efficiently.
 
 ### Tools Used
 <div>
@@ -46,7 +48,7 @@ The objective of this project was to design and build a simulated Managed Securi
 </p>
 
 ### Creating a Microsoft account
-- A Microsoft account, camphor.customer1@outlook.com, was created to represent Customer 1, using a separate browser profile and a Netherlands VPN endpoint to simulate an independent customer identity and sign-in location. Initial Azure portal sign-ins repeatedly failed with an MSAL state_mismatch error caused by browser session and cookie conflicts when using multiple Microsoft accounts.
+- A Microsoft account, `camphor.customer1@outlook.com`, was created to represent Customer 1, using a separate browser profile and a Netherlands VPN endpoint to simulate an independent customer identity and sign-in location. Initial Azure portal sign-ins repeatedly failed with an MSAL state_mismatch error caused by browser session and cookie conflicts when using multiple Microsoft accounts.
 
 ### Raised a support ticket for a microsoft subscription
 - Microsoft Support reviewed the account and removed the restriction that was preventing the creation of an Azure subscription. This allowed the Customer 1 account to complete the Azure signup process and provision its own Default Directory (tenant) and subscription. The subscription was initially empty, with no Azure resources deployed, providing a clean starting point for building the simulated customer environment.
@@ -127,7 +129,7 @@ The objective of this project was to design and build a simulated Managed Securi
 </p>
 
 ### Creating and testing a malicious inbox rule
-- To test the Malicious Inbox Rule detection, we created an inbox rule for the test account admin2@camphorcustomer1.onmicrosoft.com. We configured the rule to identify messages containing sensitive keywords and then forward them to the controlled external test address mesainenterprisesltd@gmail.com while moving the messages to a separate folder to hide them from the inbox.
+- To test the Malicious Inbox Rule detection, we created an inbox rule for the test account `admin2@camphorcustomer1.onmicrosoft.com`. We configured the rule to identify messages containing sensitive keywords and then forward them to the controlled external test address `mesainenterprisesltd@gmail.com` while moving the messages to a separate folder to hide them from the inbox.
 
 - We then generated test activity by performing failed sign-ins followed by a successful sign-in. Afterward, we allowed time for the configured analytics rules and Defender detections to process the activity and generate any resulting alerts or incidents. We reviewed the SignInLogs data and confirmed that the Entra ID connector is collecting detailed sign-in information.
 
@@ -160,7 +162,7 @@ The objective of this project was to design and build a simulated Managed Securi
 </p>
 
 ### Lighthouse verification
-- We signed into the MSSP tenant as mssptriagelabke@outlook.com and checked Service providers / My customers, but Customer 1 was not listed. We then signed back into the Customer 1 tenant and opened Subscriptions > Deployments > CustomDeployment-20260912132812 to verify both the registrationDefinition and registrationAssignment, which showed provisioningState: Succeeded. 
+- We signed into the MSSP tenant as `mssptriagelabke@outlook.com` and checked Service providers / My customers, but Customer 1 was not listed. We then signed back into the Customer 1 tenant and opened Subscriptions > Deployments > CustomDeployment-20260912132812 to verify both the registrationDefinition and registrationAssignment, which showed provisioningState: Succeeded. 
 
 - We then returned to the MSSP tenant and used the direct Customer 1 subscription URL and Subscriptions page to confirm whether the delegated Camphor Customer 1 subscription and law-customer1 workspace were accessible.
 
@@ -223,7 +225,7 @@ The objective of this project was to design and build a simulated Managed Securi
   <img src="https://github.com/NgethaWachira/Building-a-Simulated-MSSP-Environment/blob/7ae5b0eb564d44729636ea65c153b54cc6493227/Images/51.png" width="700" />
 </p>
 
-- This is a one-time subscription-level prerequisite that must be completed by the Customer 1 native administrator, CamphorCust@CamphorCustomer1.onmicrosoft.com. After registration, we can return to the MSSP account and continue creating the Logic App. The updated template was deployed to Camphor Customer 1 using the same mspOfferName, updating the existing delegation rather than creating a duplicate.
+- This is a one-time subscription-level prerequisite that must be completed by the Customer 1 native administrator, `CamphorCust@CamphorCustomer1.onmicrosoft.com`. After registration, we can return to the MSSP account and continue creating the Logic App. The updated template was deployed to Camphor Customer 1 using the same mspOfferName, updating the existing delegation rather than creating a duplicate.
 
 <p align="center">
   <img src="https://github.com/NgethaWachira/Building-a-Simulated-MSSP-Environment/blob/7ae5b0eb564d44729636ea65c153b54cc6493227/Images/52.png" width="700" />
@@ -235,7 +237,6 @@ The objective of this project was to design and build a simulated Managed Securi
 
 `mssptriagelabke@outlook.com (our MSSP tenant) > is the one who receives that delegated access, and uses it to create the Logic App, configure the Sentinel trigger, and eventually run the automation`
 
-
 ### Customer 1 logic app realy
 - At this stage, we deployed la-sentinel-relay-customer1 in rg-customer1-soc, using the Consumption plan in South Africa North, alongside the existing MSSP relay la-sentinel-relay. We can now proceed with configuring the Sentinel trigger on la-sentinel-relay-customer1 and select law-customer1 as the monitored workspace.
 
@@ -246,27 +247,27 @@ The objective of this project was to design and build a simulated Managed Securi
 ### Selecting the sentinel trigger
 - In the Logic App designer, we selected the Microsoft Sentinel incident trigger. This is the appropriate trigger for the automation because the workflow is designed to start when a Sentinel incident is created and then send the incident to the centralized triage function for investigation. 
 
-- The Microsoft Sentinel alert trigger is intended for individual alerts, while Microsoft Sentinel entity is designed for entity-focused workflows. We therefore used Microsoft Sentinel incident and proceeded with the MSSP account mssptriagelabke@outlook.com to configure the connection and select law-customer1 as the monitored workspace.
+- The Microsoft Sentinel alert trigger is intended for individual alerts, while Microsoft Sentinel entity is designed for entity-focused workflows. We therefore used Microsoft Sentinel incident and proceeded with the MSSP account `mssptriagelabke@outlook.com` to configure the connection and select law-customer1 as the monitored workspace.
 
 <p align="center">
   <img src="https://github.com/NgethaWachira/Building-a-Simulated-MSSP-Environment/blob/7ae5b0eb564d44729636ea65c153b54cc6493227/Images/54.png" width="700" />
 </p>
 
 ### Configuring the sentinel connection
-- For the Microsoft Sentinel incident trigger, we selected OAuth authentication and used the MSSP analyst account mssptriagelabke@outlook.com. The Tenant ID was left blank or set to the MSSP tenant ID 2947e56e-1901-4f69-9fc0-f9c8a7ce2cc5, since the connection authenticates the MSSP account while Azure Lighthouse provides access to the delegated Customer 1 resources. 
+- For the Microsoft Sentinel incident trigger, we selected OAuth authentication and used the MSSP analyst account `mssptriagelabke@outlook.com`. The Tenant ID was left blank or set to the MSSP tenant ID 2947e56e-1901-4f69-9fc0-f9c8a7ce2cc5, since the connection authenticates the MSSP account while Azure Lighthouse provides access to the delegated Customer 1 resources. 
 
 <p align="center">
   <img src="https://github.com/NgethaWachira/Building-a-Simulated-MSSP-Environment/blob/7ae5b0eb564d44729636ea65c153b54cc6493227/Images/55.png" width="700" />
 </p>
 
-- The connection completed successfully, showing “Connected to live.com#mssptriagelabke@outlook.com”, confirming that the OAuth connection was established with the correct account. We could then continue to the trigger parameters and select Camphor Customer 1 > rg-customer1-soc > law-customer1.
+- The connection completed successfully, showing “Connected to `live.com#mssptriagelabke@outlook.com`”, confirming that the OAuth connection was established with the correct account. We could then continue to the trigger parameters and select Camphor Customer 1 > rg-customer1-soc > law-customer1.
 
 <p align="center">
   <img src="https://github.com/NgethaWachira/Building-a-Simulated-MSSP-Environment/blob/7ae5b0eb564d44729636ea65c153b54cc6493227/Images/56.png" width="700" />
 </p>
 
 ### Preparing the HTTP action
-- Because the newer Microsoft Sentinel trigger does not require the subscription, resource group, or workspace to be selected during trigger configuration, the trigger setup was completed once the OAuth connection showed “Connected to live.com#mssptriagelabke@outlook.com”. We then moved to the HTTP action, which will send the incident data from la-sentinel-relay-customer1 to the existing func-mssp-triage2 Function App. 
+- Because the newer Microsoft Sentinel trigger does not require the subscription, resource group, or workspace to be selected during trigger configuration, the trigger setup was completed once the OAuth connection showed “Connected to `live.com#mssptriagelabke@outlook.com`”. We then moved to the HTTP action, which will send the incident data from la-sentinel-relay-customer1 to the existing func-mssp-triage2 Function App. 
 
 - Customer 1’s workspace ID was retrieved as 1c913899-5837-4bcd-9eda-316fddf4dff8. The remaining value needed to complete the HTTP request is the SentinelTriage function key, which was retrieved from Cloud Shell by telling Azure CLI which Azure subscription to work in before running the command.
 
@@ -286,7 +287,7 @@ The objective of this project was to design and build a simulated Managed Securi
 ### Sentinel workspace model
 - Microsoft Defender portal’s primary/secondary Sentinel workspace model is designed around workspaces within the same Microsoft Entra tenant, while Azure Lighthouse delegated access does not provide the required cross-tenant Sentinel data integration in the Defender portal. Therefore, we stopped trying to connect law-triage-lab and law-customer1 through the unified Defender portal. 
 
-- For the Customer 1 automation rule, the appropriate next step was to work directly in the Customer 1 tenant using CamphorCust@CamphorCustomer1.onmicrosoft.com and configure the automation rule against law-customer1. la-sentinel-relay-customer1 now appears.
+- For the Customer 1 automation rule, the appropriate next step was to work directly in the Customer 1 tenant using `CamphorCust@CamphorCustomer1.onmicrosoft.com` and configure the automation rule against law-customer1. la-sentinel-relay-customer1 now appears.
 
 <p align="center">
   <img src="https://github.com/NgethaWachira/Building-a-Simulated-MSSP-Environment/blob/02ade3e429530a7817d7fbd25ff43486e108106a/Images/61.png" width="700" />
@@ -315,7 +316,7 @@ The objective of this project was to design and build a simulated Managed Securi
   <img src="https://github.com/NgethaWachira/Building-a-Simulated-MSSP-Environment/blob/02ade3e429530a7817d7fbd25ff43486e108106a/Images/63.png" width="700" />
 </p>
 
-- We joined the laptop to Microsoft Entra ID using analyst2@camphorcustomer1.onmicrosoft.com and completed the Windows join process. After restarting the device, we verified that AzureAdJoined: Yes and MDM: Microsoft Intune confirmed successful Intune enrollment. The device was then available in the Intune and Microsoft security portals for further validation.
+- We joined the laptop to Microsoft Entra ID using `analyst2@camphorcustomer1.onmicrosoft.com` and completed the Windows join process. After restarting the device, we verified that AzureAdJoined: Yes and MDM: Microsoft Intune confirmed successful Intune enrollment. The device was then available in the Intune and Microsoft security portals for further validation.
 
 <p align="center">
   <img src="https://github.com/NgethaWachira/Building-a-Simulated-MSSP-Environment/blob/02ade3e429530a7817d7fbd25ff43486e108106a/Images/68.png" width="700" />
@@ -363,7 +364,7 @@ The objective of this project was to design and build a simulated Managed Securi
 </p>
 
 ### Freshservice account setup
-- The Camphor Clavis Freshservice organization was created at camphorclavis.freshservice.com, with James Ngetha configured as the Organization Admin. We then accessed the Freshservice administration area and identified that the AI Agents section was unrelated to the required setup. The next step was to locate the appropriate Agents and API Settings sections for the SOC integration.
+- The Camphor Clavis Freshservice organization was created at `camphorclavis.freshservice.com`, with James Ngetha configured as the Organization Admin. We then accessed the Freshservice administration area and identified that the AI Agents section was unrelated to the required setup. The next step was to locate the appropriate Agents and API Settings sections for the SOC integration.
 
 <p align="center">
   <img src="https://github.com/NgethaWachira/Building-a-Simulated-MSSP-Environment/blob/931bbdc91e12ff695d9476741cd1cef319734140/Images/74.png" width="700" />
@@ -379,7 +380,7 @@ The objective of this project was to design and build a simulated Managed Securi
 </p>
 
 ### Freshservice API access testing
-- We retrieved the Freshservice API key from the Yogi Bear agent account and proceeded to test API access from Azure Cloud Shell while signed in through the MSSP tenant. The request to https://camphorclavis.freshservice.com/api/v2/tickets returned an access_denied response with the message “You are not authorized to perform this action.”
+- We retrieved the Freshservice API key from the Yogi Bear agent account and proceeded to test API access from Azure Cloud Shell while signed in through the MSSP tenant. The request to `https://camphorclavis.freshservice.com/api/v2/tickets` returned an access_denied response with the message “You are not authorized to perform this action.”
 
 - This indicated that although the API key had been retrieved successfully, further investigation was required to determine why the Freshservice API request was not authorized before continuing with the Function App integration.
 
@@ -390,17 +391,30 @@ The objective of this project was to design and build a simulated Managed Securi
 ### Freshservice API intergration access
 - We identified Integration Users under Freshservice Admin → User Management as the appropriate method for automated API access. Instead of using a personal agent API key, we created a dedicated integration user for the MSSP automation and assigned the required ticket permissions. We then used the integration user's API key to test the Freshservice API. 
 
-- The request to https://camphorclavis.freshservice.com/api/v2/tickets returned {"tickets":[]}, confirming that API authentication and access were working successfully.
+- The request to `https://camphorclavis.freshservice.com/api/v2/tickets` returned {"tickets":[]}, confirming that API authentication and access were working successfully.
 
+### Freshservice configuration and function app preparation
+- We identified Yogi Bear’s Freshservice responder ID as 41001012787 and prepared the required Function App settings: FRESHSERVICE_DOMAIN, FRESHSERVICE_API_KEY, and FRESHSERVICE_RESPONDER_ID. Because the newer Azure portal layout uses Environment variables instead of the previous Application Settings location, we added each setting using its Name and Value fields and saved the configuration.
 
+- The next step is to update function_app.py with the Freshservice ticket-creation logic, using the current version of the file to ensure the changes are added correctly
 
+<p align="center">
+  <img src="https://github.com/NgethaWachira/Building-a-Simulated-MSSP-Environment/blob/ce982c795c9a14ea6a9fea7ee30dd3c3771b1894/Images/78a.png" width="700" />
+</p>
 
+### Freshservice ticket creation intergration
+- We reviewed the current function_app.py and integrated Freshservice ticket creation into the existing Sentinel auto-triage workflow. The changes added Freshservice environment variables, a create_freshservice_ticket() function, and the required take_action() and triage() updates. Tickets are created only when an incident is classified as Suspicious, keeping Freshservice escalation aligned with the escalation-required Sentinel tag.
 
+- The ticket includes the investigation summary, key entities, recommendations, and correlation ID, while Freshservice failures are logged without interrupting the core Sentinel triage process. Before deployment, FRESHSERVICE_REQUESTER_EMAIL was added to the Function App environment variables.
 
+### End to end freshservice escalation validation
+- The end-to-end incident-response workflow was successfully validated when a Sentinel incident generated an automated Freshservice escalation. The incident was investigated and classified as Suspicious, with the analysis identifying multiple failed sign-ins followed by a successful authentication, Azure CLI usage, and an unmanaged, non-compliant Windows 10 device. 
 
+- A Freshservice ticket was automatically created and assigned to Yogi Bear, with the investigation details, key entities, recommendations, and correlation ID included. The notification email was delivered successfully, confirming the complete Sentinel > Logic App > Function App > Freshservice escalation workflow.
 
-
-
+<p align="center">
+  <img src="https://github.com/NgethaWachira/Building-a-Simulated-MSSP-Environment/blob/ce982c795c9a14ea6a9fea7ee30dd3c3771b1894/Images/80.png" width="700" />
+</p>
 
 
 
