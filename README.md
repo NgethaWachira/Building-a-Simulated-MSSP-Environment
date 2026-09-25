@@ -111,3 +111,15 @@ Microsoft Sentinel's Content Hub was used to install the required solution packa
 <p align="center">
   <img src="https://github.com/NgethaWachira/Building-a-Simulated-MSSP-Environment/blob/dc9b4b454ffd209e9fdb7baf3e469caf45eaf6bd/Images/26.png" width="700" />
 </p>
+
+### Sentinel analytics rule
+After connecting the required data sources, we configured Microsoft Sentinel Analytics rules to detect suspicious activity and generate incidents. From the available rule templates, we enabled selected rules for Microsoft Defender XDR, Microsoft Entra ID, and Microsoft 365, including the Defender XDR rule that creates Sentinel incidents from Defender alerts, sign-ins to disabled accounts, anomalous or impossible-travel sign-ins, malicious inbox rules, unusual file activity, and changes to authentication methods for privileged accounts. These rules provided the initial detection baseline for the SOC automation pipeline.
+
+<p align="center">
+  <img src="https://github.com/NgethaWachira/Building-a-Simulated-MSSP-Environment/blob/c15bc7d83fcf64d17ed8a292e47839865e5f9b11/Images/33.png" width="700" />
+</p>
+
+
+
+
+
