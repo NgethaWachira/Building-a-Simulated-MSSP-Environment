@@ -328,6 +328,77 @@ The objective of this project was to design and build a simulated Managed Securi
   <img src="https://github.com/NgethaWachira/Building-a-Simulated-MSSP-Environment/blob/02ade3e429530a7817d7fbd25ff43486e108106a/Images/70.png" width="700" />
 </p>
 
+### Potential DLL side-loading detection test
+- We created a Microsoft Defender for Endpoint custom detection rule to identify potential DLL side-loading from user-writable locations such as AppData, Temp, Downloads, and Desktop. The rule queries DeviceImageLoadEvents and captures the loading process, DLL path, device, account, and related process details. 
+
+- We then planned to download Spotify on the onboarded device as a controlled test, since its legitimate use of user-writable application paths could generate matching telemetry. The resulting alert would then be used to validate the Sentinel investigation and automation pipeline.
+
+<p align="center">
+  <img src="https://github.com/NgethaWachira/Building-a-Simulated-MSSP-Environment/blob/4a50a550df9ef262d3b8e89b72d907b7313b678c/Images/71.png" width="700" />
+</p>
+
+### Troubleshooting customer 1 automation failure
+- We got an error, the Logic App trigger was functioning, but the HTTP action returned 500 InternalServerError. The Function App response identified the underlying issue as 403 Forbidden when accessing the Customer 1 Sentinel incident through the Azure management API. The incident input and workspace details were correct, confirming that the issue was a permissions gap for the Function App's managed identity on rg-customer1-soc. 
+
+<p align="center">
+  <img src="https://github.com/NgethaWachira/Building-a-Simulated-MSSP-Environment/blob/931bbdc91e12ff695d9476741cd1cef319734140/Images/error2.jpg" width="450" />
+</p>
+
+### End to end automation validation
+- The next step was to grant the Function App appropriate Sentinel access and retest with a fresh run.
+
+- The fresh Logic App runs completed successfully, confirming that the previous 403 Forbidden error had been resolved. The resulting incidents were processed automatically, with the DLL side-loading incident classified as a false positive, closed, and tagged auto-closed-fp.
+
+<p align="center">
+  <img src="https://github.com/NgethaWachira/Building-a-Simulated-MSSP-Environment/blob/931bbdc91e12ff695d9476741cd1cef319734140/Images/72a.png" width="700" />
+</p>
+
+### Freshservice intergration setup
+- We began integrating Freshservice as the client escalation platform for suspicious Sentinel incidents. Freshservice was selected as the ticketing destination, using its REST API and API-key authentication. During registration, the service required a business email address, so we planned to use the existing camphorclavis.com domain to create a business-domain address through email forwarding.
+
+- This would allow Freshservice verification messages to be forwarded to the existing Gmail inbox without requiring a separate mailbox or full email-hosting service.
+
+<p align="center">
+  <img src="https://github.com/NgethaWachira/Building-a-Simulated-MSSP-Environment/blob/931bbdc91e12ff695d9476741cd1cef319734140/Images/73.png" width="450" />
+</p>
+
+### Freshservice account setup
+- The Camphor Clavis Freshservice organization was created at camphorclavis.freshservice.com, with James Ngetha configured as the Organization Admin. We then accessed the Freshservice administration area and identified that the AI Agents section was unrelated to the required setup. The next step was to locate the appropriate Agents and API Settings sections for the SOC integration.
+
+<p align="center">
+  <img src="https://github.com/NgethaWachira/Building-a-Simulated-MSSP-Environment/blob/931bbdc91e12ff695d9476741cd1cef319734140/Images/74.png" width="700" />
+</p>
+
+### Freshservice agent and API Key setup
+- We added `camphor.customer1@outlook.com` to Freshservice as the Customer 1 Security Admin agent, using the Yogi Bear security-admin persona. Freshservice then confirmed that API key access had been enabled for the account and indicated that the key could be accessed through Profile Settings.
+
+- Because the API key belongs to `camphor.customer1@outlook.com`, rather than the `contact@camphorclavis.com` organization-admin account, we needed to access Freshservice under the Customer 1 agent identity to retrieve the key.
+
+<p align="center">
+  <img src="https://github.com/NgethaWachira/Building-a-Simulated-MSSP-Environment/blob/931bbdc91e12ff695d9476741cd1cef319734140/Images/76.png" width="700" />
+</p>
+
+### Freshservice API access testing
+- We retrieved the Freshservice API key from the Yogi Bear agent account and proceeded to test API access from Azure Cloud Shell while signed in through the MSSP tenant. The request to https://camphorclavis.freshservice.com/api/v2/tickets returned an access_denied response with the message “You are not authorized to perform this action.”
+
+- This indicated that although the API key had been retrieved successfully, further investigation was required to determine why the Freshservice API request was not authorized before continuing with the Function App integration.
+
+<p align="center">
+  <img src="https://github.com/NgethaWachira/Building-a-Simulated-MSSP-Environment/blob/931bbdc91e12ff695d9476741cd1cef319734140/Images/77.png" width="700" />
+</p>
+
+### Freshservice API intergration access
+- We identified Integration Users under Freshservice Admin → User Management as the appropriate method for automated API access. Instead of using a personal agent API key, we created a dedicated integration user for the MSSP automation and assigned the required ticket permissions. We then used the integration user's API key to test the Freshservice API. 
+
+- The request to https://camphorclavis.freshservice.com/api/v2/tickets returned {"tickets":[]}, confirming that API authentication and access were working successfully.
+
+
+
+
+
+
+
+
 
 
 
