@@ -63,9 +63,22 @@ The objective of this project was to design and build a simulated Managed Securi
   <img src="https://github.com/NgethaWachira/Building-a-Simulated-MSSP-Environment/blob/8548bbb1506cff6b49917caa373a64dab2075365/Images/6.png" width="350" />
 </p>
 
+### Consolidating to just Customer 1
+- After encountering repeated Microsoft restrictions while creating additional customer tenants, we decided to consolidate the lab into Customer 1. The plan was to use this single tenant to host all required telemetry sources, including Microsoft Defender XDR, Cloud Apps, Office 365, Entra ID identity data, and Intune. This simplified the environment while still providing diverse data for testing the SOC automation and investigation pipeline.
 
+### “No business presence” blocked all self-service purchasing
+- A newly created Entra ID tenant (with no Microsoft 365 service ever purchased) could not be used to buy Microsoft 365 E5 directly — the retail storefront requires an existing commercial relationship (“business presence”) before it will sell into that tenant, but establishing that presence normally requires making a purchase, creating a circular blocker.
+ 
+- Resolution: A small, self-service-eligible product (Microsoft 365 Business Basic, later superseded by an E3 trial) was purchased first specifically to establish business presence, after which the admin center’s internal purchase catalog exposed E5 as purchasable, resolving the deadlock.
 
+<p align="center">
+  <img src="https://github.com/NgethaWachira/Building-a-Simulated-MSSP-Environment/blob/648913e5feb9c7e179a07be3f6176fa9ad865dbb/Images/8.png" width="700" />
+</p>
 
+### Retail commerce silently created a second, unintended tenant
+- When the E3 trial signup flow asked for a username and domain rather than recognizing the existing signed-in Global Administrator, it became clear that the flow intended to create a brand new tenant rather than attach the purchase to the tenant already in use.
+
+- Resolution: rather than fight this behavior, the new tenant was accepted as authoritative (since it had working business presence) and the existing, already-active Pay-As-You-Go Azure subscription was moved into it via Change Directory -- turning what looked like a duplication problem into a straightforward consolidation step.
 
 
 
