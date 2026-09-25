@@ -283,6 +283,55 @@ The objective of this project was to design and build a simulated Managed Securi
   <img src="https://github.com/NgethaWachira/Building-a-Simulated-MSSP-Environment/blob/438888442273abb2bc4e7a1927cd3fc78ce7f2af/Images/59.png" width="700" />
 </p>
 
+### Sentinel workspace model
+- Microsoft Defender portal’s primary/secondary Sentinel workspace model is designed around workspaces within the same Microsoft Entra tenant, while Azure Lighthouse delegated access does not provide the required cross-tenant Sentinel data integration in the Defender portal. Therefore, we stopped trying to connect law-triage-lab and law-customer1 through the unified Defender portal. 
+
+- For the Customer 1 automation rule, the appropriate next step was to work directly in the Customer 1 tenant using CamphorCust@CamphorCustomer1.onmicrosoft.com and configure the automation rule against law-customer1. la-sentinel-relay-customer1 now appears.
+
+<p align="center">
+  <img src="https://github.com/NgethaWachira/Building-a-Simulated-MSSP-Environment/blob/02ade3e429530a7817d7fbd25ff43486e108106a/Images/61.png" width="700" />
+</p>
+
+### Customer 1 automation rule verification
+- The rule is Active, triggers when an incident is created, and its action is correctly configured as Run Logic App playbook: la-sentinel-relay-customer1. This confirms that the Customer 1 incident flow is connected to the dedicated relay rather than the MSSP relay. The expected workflow is now new incident in law-customer1 → automation rule → la-sentinel-relay-customer1 → HTTP POST to func-mssp-triage2 → Claude investigation → shadow-mode results returned to the incident. 
+
+- The next step was to generate a fresh test incident and verify the complete flow.
+
+<p align="center">
+  <img src="https://github.com/NgethaWachira/Building-a-Simulated-MSSP-Environment/blob/02ade3e429530a7817d7fbd25ff43486e108106a/Images/62.png" width="700" />
+</p>
+
+### End to end automation validation
+- We then generated a fresh test incident in law-customer1 and confirmed that the automation pipeline executed successfully. The incident received the expected shadow-mode analysis comment and tags, confirming the complete flow. This successfully validated the end-to-end SOC automation pipeline.
+
+<p align="center">
+  <img src="https://github.com/NgethaWachira/Building-a-Simulated-MSSP-Environment/blob/02ade3e429530a7817d7fbd25ff43486e108106a/Images/63.png" width="700" />
+</p>
+
+### Device enrollment and testing process
+- We used a laptop to enroll it in Intune and generate device-related alerts for testing. The process involved joining the device to Microsoft Entra ID using a native Customer 1 account, confirming the device appeared as Microsoft Entra joined, and verifying Intune enrollment.
+
+<p align="center">
+  <img src="https://github.com/NgethaWachira/Building-a-Simulated-MSSP-Environment/blob/02ade3e429530a7817d7fbd25ff43486e108106a/Images/63.png" width="700" />
+</p>
+
+- We joined the laptop to Microsoft Entra ID using analyst2@camphorcustomer1.onmicrosoft.com and completed the Windows join process. After restarting the device, we verified that AzureAdJoined: Yes and MDM: Microsoft Intune confirmed successful Intune enrollment. The device was then available in the Intune and Microsoft security portals for further validation.
+
+<p align="center">
+  <img src="https://github.com/NgethaWachira/Building-a-Simulated-MSSP-Environment/blob/02ade3e429530a7817d7fbd25ff43486e108106a/Images/68.png" width="700" />
+</p>
+
+### Defender for endpoint onboarding
+- We downloaded the Microsoft Defender for Endpoint onboarding script and ran it on the enrolled laptop using an elevated administrator session. After onboarding completed, the device desktop-lrpasie appeared in the Defender device inventory with an Active health state and Full security operations status.
+
+<p align="center">
+  <img src="https://github.com/NgethaWachira/Building-a-Simulated-MSSP-Environment/blob/02ade3e429530a7817d7fbd25ff43486e108106a/Images/70.png" width="700" />
+</p>
+
+
+
+
+
 
 
 
