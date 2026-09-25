@@ -75,19 +75,39 @@ The objective of this project was to design and build a simulated Managed Securi
   <img src="https://github.com/NgethaWachira/Building-a-Simulated-MSSP-Environment/blob/d5d842e691757a95ebcdbd8b0ec1d6ab269e3fc4/Images/11.png" width="700" />
 </p>
 
-### Retail commerce silently created a second, unintended tenant
-- When the E3 trial signup flow asked for a username and domain rather than recognizing the existing signed-in Global Administrator, it became clear that the flow intended to create a brand new tenant rather than attach the purchase to the tenant already in use.
+The required Microsoft 365 E5 licenses were assigned with the recommended services enabled. After the licenses were assigned, the Microsoft Defender portal was opened and confirmed to be fully accessible, including Endpoints, Email & collaboration, Identities, Cloud Apps, and Sentinel integration. Entra ID was also checked to confirm that the E5 identity features were available. No additional configuration was needed at this stage.
 
-- Resolution: rather than fight this behavior, the new tenant was accepted as authoritative (since it had working business presence) and the existing, already-active Pay-As-You-Go Azure subscription was moved into it via Change Directory -- turning what looked like a duplication problem into a straightforward consolidation step.
+<p align="center">
+  <img src="https://github.com/NgethaWachira/Building-a-Simulated-MSSP-Environment/blob/d5d842e691757a95ebcdbd8b0ec1d6ab269e3fc4/Images/11.png" width="700" />
+</p>
+
+### Retail commerce silently created a second, unintended tenant
+- The E3 trial flow created a new tenant instead of adding the service to the existing Customer 1 tenant. Because the new tenant was different, the existing Azure PAYG subscription was not initially available under the new tenant.
+  
+- The solution was to use Change directory to move the existing Azure subscription into the newly created tenant. This effectively consolidated the Azure subscription and Microsoft 365 business services into the new tenant, rather than creating another separate environment.
 
 <p align="center">
   <img src="https://github.com/NgethaWachira/Building-a-Simulated-MSSP-Environment/blob/d5d842e691757a95ebcdbd8b0ec1d6ab269e3fc4/Images/12a.jpg" width="375" />
   <img src="https://github.com/NgethaWachira/Building-a-Simulated-MSSP-Environment/blob/d5d842e691757a95ebcdbd8b0ec1d6ab269e3fc4/Images/18.png" width="250" />
 </p>
 
+### Creating the Log Analytics workspace + Sentinel
+- Next we created the Log Analytics workspace, configuring basic cost-control tags, and then enabling Microsoft Sentinel on that workspace. The final state was law-customer1, in resource group rg-customer1-soc, located in South Africa North, under the Camphor Customer 1 subscription. Once the workspace appeared in the Sentinel creation page, it was ready to have Sentinel enabled and configured.
 
+<p align="center">
+  <img src="https://github.com/NgethaWachira/Building-a-Simulated-MSSP-Environment/blob/dc9b4b454ffd209e9fdb7baf3e469caf45eaf6bd/Images/24.png" width="700" />
+</p>
 
+### Setting the daily ingestion cap first
+- Before enabling any Sentinel connectors, a daily ingestion limit was configured on the law-customer1 Log Analytics workspace to help control costs. The Data Cap setting was used to limit the amount of data that could be ingested each day, with 1 GB per day chosen as a suitable limit for the lab. Retention was left at the default 31 days, which was sufficient for active testing and investigation.
 
+<p align="center">
+  <img src="https://github.com/NgethaWachira/Building-a-Simulated-MSSP-Environment/blob/dc9b4b454ffd209e9fdb7baf3e469caf45eaf6bd/Images/25.png" width="700" />
+</p>
 
+### Sentinel content hub and data sources
+Microsoft Sentinel's Content Hub was used to install the required solution packages for Microsoft Defender XDR, Microsoft Entra ID, and Microsoft 365. Content Hub provides packaged resources such as data connectors, analytics rules, workbooks, and hunting queries. After installing the Defender XDR solution, we connected Sentinel to different data sources to enable data ingestion. The actual cost comes from data ingestion, which was already controlled by the workspace's daily ingestion cap.
 
-
+<p align="center">
+  <img src="https://github.com/NgethaWachira/Building-a-Simulated-MSSP-Environment/blob/dc9b4b454ffd209e9fdb7baf3e469caf45eaf6bd/Images/26.png" width="700" />
+</p>
