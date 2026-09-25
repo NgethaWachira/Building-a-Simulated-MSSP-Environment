@@ -72,13 +72,18 @@ The objective of this project was to design and build a simulated Managed Securi
 - Resolution: A small, self-service-eligible product (Microsoft 365 Business Basic, later superseded by an E3 trial) was purchased first specifically to establish business presence, after which the admin center’s internal purchase catalog exposed E5 as purchasable, resolving the deadlock.
 
 <p align="center">
-  <img src="https://github.com/NgethaWachira/Building-a-Simulated-MSSP-Environment/blob/648913e5feb9c7e179a07be3f6176fa9ad865dbb/Images/8.png" width="700" />
+  <img src="https://github.com/NgethaWachira/Building-a-Simulated-MSSP-Environment/blob/d5d842e691757a95ebcdbd8b0ec1d6ab269e3fc4/Images/11.png" width="700" />
 </p>
 
 ### Retail commerce silently created a second, unintended tenant
 - When the E3 trial signup flow asked for a username and domain rather than recognizing the existing signed-in Global Administrator, it became clear that the flow intended to create a brand new tenant rather than attach the purchase to the tenant already in use.
 
 - Resolution: rather than fight this behavior, the new tenant was accepted as authoritative (since it had working business presence) and the existing, already-active Pay-As-You-Go Azure subscription was moved into it via Change Directory -- turning what looked like a duplication problem into a straightforward consolidation step.
+
+<p align="center">
+  <img src="https://github.com/NgethaWachira/Building-a-Simulated-MSSP-Environment/blob/d5d842e691757a95ebcdbd8b0ec1d6ab269e3fc4/Images/12a.jpg" width="375" />
+  <img src="https://github.com/NgethaWachira/Building-a-Simulated-MSSP-Environment/blob/d5d842e691757a95ebcdbd8b0ec1d6ab269e3fc4/Images/18.png" width="250" />
+</p>
 
 
 
