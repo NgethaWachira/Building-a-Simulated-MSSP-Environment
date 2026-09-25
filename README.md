@@ -198,8 +198,14 @@ The objective of this project was to design and build a simulated Managed Securi
   <img src="https://github.com/NgethaWachira/Building-a-Simulated-MSSP-Environment/blob/ade60d734982e74814540da0c002c39ab7225afc/Images/48.png" width="700" />
 </p>
 
+### Customer 1 sentinel relay setup
+- Lighthouse does not provide a centralized notification mechanism for new Sentinel incidents. Because the “When a Microsoft Sentinel incident is created” trigger is scoped to the customer’s Sentinel workspace, each client requires a small relay configuration consisting of a Logic App and Sentinel automation rule in that client’s environment.
 
+- The investigation and triage logic remains centralized in the MSSP’s existing func-mssp-triage2 Function App, which can be reused across all customers. From law-customer1, we'll navigate to creating the Logic App from there.
 
+<p align="center">
+  <img src="https://github.com/NgethaWachira/Building-a-Simulated-MSSP-Environment/blob/90d9d5db2d2a934f4d5840aafac83efca3987a04/Images/49.png" width="700" />
+</p>
 
 
 
