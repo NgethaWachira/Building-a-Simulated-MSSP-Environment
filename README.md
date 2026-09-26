@@ -416,6 +416,94 @@ The next step was to configure Azure Lighthouse so the MSSP tenant could access 
   <img src="https://github.com/NgethaWachira/Building-a-Simulated-MSSP-Environment/blob/ce982c795c9a14ea6a9fea7ee30dd3c3771b1894/Images/80.png" width="700" />
 </p>
 
+### Defender XDR RBAC roles
+- While configuring the planned analyst response access, the expected Defender XDR Roles section was not visible in the initial settings area. We identified that the relevant location was Permissions and roles, rather than the general Defender XDR settings page.
+
+- The investigation then focused on whether Microsoft Defender for Endpoint unified RBAC was already active in Customer 1 and where the available Roles section was exposed. The next step was to locate the Roles page or use the Defender portal search to identify the correct RBAC configuration area.
+
+<p align="center">
+  <img src="https://github.com/NgethaWachira/Building-a-Simulated-MSSP-Environment/blob/bc1bd9dbf0218ba3a412ecebb8f9bca89255d1cc/Images/82.png" width="700" />
+</p>
+
+### Analyst response actions
+- We planned to extend the MSSP environment with controlled analyst response actions and scalable client access. In Customer 1, analysts would receive scoped Defender XDR permissions for actions such as device isolation and an Entra ID role such as Helpdesk Administrator for password resets.
+
+<p align="center">
+  <img src="https://github.com/NgethaWachira/Building-a-Simulated-MSSP-Environment/blob/bc1bd9dbf0218ba3a412ecebb8f9bca89255d1cc/Images/83.png" width="700" />
+</p>
+
+### SOC analyst response group assignment
+- We created the SOC-Analysts-Response security group and used it as the required assignment for the Defender response role. This group provides a central way to manage the analysts who will receive the scoped response permissions.
+
+<p align="center">
+  <img src="https://github.com/NgethaWachira/Building-a-Simulated-MSSP-Environment/blob/bc1bd9dbf0218ba3a412ecebb8f9bca89255d1cc/Images/86.png" width="700" />
+</p>
+
+### Entra entitlement management
+- Entra Entitlement Management would use a Connected Organization, catalog, and Access Package to provide a structured way for MSSP analysts to request access. This would allow access to be approved and time-limited, reducing the need to manually invite and manage each analyst individually.
+
+<p align="center">
+  <img src="https://github.com/NgethaWachira/Building-a-Simulated-MSSP-Environment/blob/bc1bd9dbf0218ba3a412ecebb8f9bca89255d1cc/Images/87.png" width="700" />
+</p>
+
+### Role assignable security group configuration
+- We found that SOC-Analysts-Response was created as a standard Security group and therefore was not available when assigning the Entra Helpdesk Administrator role. The group needed to be created with Microsoft Entra roles can be assigned to this group enabled at creation time.
+
+- We therefore created a new role-assignable SOC-Analysts-Response group, re-pointed the Defender custom role assignment to the new group, and then used the same group for the Entra password-reset role. This ensured both role assignments were managed through a single group.
+
+<p align="center">
+  <img src="https://github.com/NgethaWachira/Building-a-Simulated-MSSP-Environment/blob/01d9f41f60a76ceed15503d4f86e7ad4fc6ac8fb/Images/84a.png" width="700" />
+</p>
+
+### Entra entitlement management configuration
+- We registered Camphor Clavis MSSP as a Connected Organization with the description “MSSP partner tenant providing SOC analyst services for Camphor Customer 1” and set its state to Configured. We then created the SOC Access catalog, added the SOC-Analysts-Response group as a resource, and created the Customer 1 SOC Response Access package. 
+
+- The package was configured for external self-service requests, approval, requestor justification, and time-limited access with lifecycle controls.
+
+<p align="center">
+  <img src="https://github.com/NgethaWachira/Building-a-Simulated-MSSP-Environment/blob/01d9f41f60a76ceed15503d4f86e7ad4fc6ac8fb/Images/88.png" width="700" />
+  <br>
+  <img src="https://github.com/NgethaWachira/Building-a-Simulated-MSSP-Environment/blob/01d9f41f60a76ceed15503d4f86e7ad4fc6ac8fb/Images/92.png" width="700" />
+</p>
+
+### Testing customer 1 SOC response access
+- We tested the Entra Entitlement Management workflow using the MSSP analyst identity analyst1@camphorclavis.com. The analyst signed in to myaccess.microsoft.com, but the general Access Packages view showed no available packages because it was displaying packages from the analyst’s home tenant. We therefore identified the need to use the specific My Access portal link for Customer 1 SOC Response Access from the Customer 1 tenant.
+
+<p align="center">
+  <img src="https://github.com/NgethaWachira/Building-a-Simulated-MSSP-Environment/blob/01d9f41f60a76ceed15503d4f86e7ad4fc6ac8fb/Images/95.png" width="700" />
+</p>
+
+- The analyst would then submit a request with the justification: “Requesting SOC analyst response access to support ongoing security monitoring and incident response for Camphor Customer 1.”
+
+<p align="center">
+  <img src="https://github.com/NgethaWachira/Building-a-Simulated-MSSP-Environment/blob/01d9f41f60a76ceed15503d4f86e7ad4fc6ac8fb/Images/96.png" width="700" />
+</p>
+
+### Access package approval troubleshooting
+- We attempted to approve the Customer 1 SOC Response Access request submitted by analyst1@camphorclavis.com. The pending request was visible in the Customer 1 Entitlement Management interface, but there was no Approvals option in the available Access Management navigation, and the request itself was not directly clickable. 
+
+- We therefore determined that the approval workflow needed to be accessed through the My Access portal using the Customer 1 administrator identity CamphorCust@CamphorCustomer1.onmicrosoft.com, where the pending request should be available for approval.
+
+<p align="center">
+  <img src="https://github.com/NgethaWachira/Building-a-Simulated-MSSP-Environment/blob/01d9f41f60a76ceed15503d4f86e7ad4fc6ac8fb/Images/97.png" width="700" />
+</p>
+
+### Tenant signin branding and identification
+- We configured Microsoft Entra Company Branding for Customer 1 to display the Camphor Customer 1 name and branding on the Microsoft sign-in page. We tested the branding with the native CamphorCust@CamphorCustomer1.onmicrosoft.com account and separately considered the experience for guest analysts such as analyst1@camphorclavis.com. 
+
+- Testing confirmed that Company Branding applies to the Microsoft sign-in page but does not show the customer’s branding inside the Microsoft Defender portal yet.
+
+<p align="center">
+  <img src="https://github.com/NgethaWachira/Building-a-Simulated-MSSP-Environment/blob/63effc045fd4c60398cc4f64709914c15ad2e90a/Images/99a.png" width="450" />
+</p>
+
+
+
+
+
+
+
+
 
 
 
