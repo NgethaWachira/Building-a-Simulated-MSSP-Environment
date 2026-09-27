@@ -3,7 +3,7 @@
 ## Objective
 The objective of this project was to design and build a simulated Managed Security Service Provider (MSSP) environment from the ground up, with a focus on replicating the architecture and operational processes used by real-world MSSPs to manage security across multiple client organizations. The environment incorporated the Microsoft security stack, including Azure Lighthouse, Microsoft Sentinel, Microsoft Defender XDR and Entra ID Governance, the same tools real MSSPs use to protect multiple client organizations. </br> </br>
 Alongside the environment, I set out to create an AI-powered SOC automation pipeline using Claude. When a Sentinel incident fires, the pipeline runs KQL investigations, reaches an evidence-based verdict and escalates suspicious findings to a ticketing system for client follow-up. The project covered the full lifecycle of an MSSP engagement: onboarding a client tenant, setting up cross-tenant delegated access, tuning detection rules, enrolling devices into Intune and Defender for Endpoint, and building a scalable model for granting analysts response permissions. <br></br> 
-The broader aim was to demonstrate how modern security operations can be integrated into a cohesive MSSP model, while exploring how AI can support analysts by making incident investigation and response more efficient.
+The broader aim was to demonstrate how modern security operations can be integrated into an MSSP model, while exploring how AI can support analysts by making incident investigation and response more efficient.
 
 ### Tools Used
 <div>
