@@ -537,7 +537,7 @@ The next step was to configure Azure Lighthouse so the MSSP tenant could access 
 - This project delivered a working, end-to-end simulation of an MSSP’s core technical operations: multi-tenant delegated access, a fully licensed and instrumented client environment, an AI-driven investigation and triage pipeline validated against real security incidents, a genuine client-facing escalation workflow, real endpoint enrollment, and a governed, scalable model for granting analysts the access they need across client tenants.
 
 <p align="center">
-  <img src="https://github.com/NgethaWachira/Building-a-Simulated-MSSP-Environment/blob/2170acd228d1c68c4df1ec5a61da10e5d6821cbd/Images/Done%20and%20Done.png" width="500" />
+  <img src="https://github.com/NgethaWachira/Building-a-Simulated-MSSP-Environment/blob/850b42063ad5c02fc0cbdab1263bb0ef89269599/Images/Done%20and%20Done.png" width="500" />
 </p>
 
 
