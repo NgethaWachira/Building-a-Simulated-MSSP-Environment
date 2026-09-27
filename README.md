@@ -41,7 +41,9 @@ The broader aim was to deepen my practical understanding of how modern security 
 
 ## Steps
 ### Domain Registration and MSSP Foundation
-- I registered the MSSP domain camphorclavis.com through Porkbun. At this stage, no web hosting or separate email hosting is required. The domain is primarily used for identity and Azure/Entra ID configuration, with Porkbun providing the required DNS management. The initial setup involves adding the TXT record provided by Entra ID to verify ownership of the domain. Later, if email services are required, Microsoft 365 can provide Exchange Online mailboxes using the verified domain, with the required MX, SPF, and DKIM records configured through Porkbun. Web hosting is optional and is not required for the MSSP lab.
+- I registered the MSSP domain camphorclavis.com through Porkbun. At this stage, no web hosting or separate email hosting is required. The domain is primarily used for identity and Azure/Entra ID configuration, with Porkbun providing the required DNS management. The initial setup involves adding the TXT record provided by Entra ID to verify ownership of the domain.
+
+- Later, if email services are required, Microsoft 365 can provide Exchange Online mailboxes using the verified domain, with the required MX, SPF, and DKIM records configured through Porkbun. Web hosting is optional and is not required for the MSSP lab.
 
 <p align="center">
   <img src="https://github.com/NgethaWachira/Building-a-Simulated-MSSP-Environment/blob/7c13a36dc99858348b2d922175afad98630de39e/Images/1.png" width="700" />
@@ -80,7 +82,7 @@ The broader aim was to deepen my practical understanding of how modern security 
 - The required Microsoft 365 E5 licenses were assigned with the recommended services enabled. After the licenses were assigned, the Microsoft Defender portal was opened and confirmed to be fully accessible, including Endpoints, Email & collaboration, Identities, Cloud Apps, and Sentinel integration. Entra ID was also checked to confirm that the E5 identity features were available. No additional configuration was needed at this stage.
 
 <p align="center">
-  <img src="https://github.com/NgethaWachira/Building-a-Simulated-MSSP-Environment/blob/d5d842e691757a95ebcdbd8b0ec1d6ab269e3fc4/Images/11.png" width="700" />
+  <img src="https://github.com/NgethaWachira/Building-a-Simulated-MSSP-Environment/blob/4e61c1b52c793ab9893cfd679f32db459db77d45/Images/10.png" width="700" />
 </p>
 
 ### Retail commerce silently created a second, unintended tenant
@@ -467,7 +469,7 @@ The next step was to configure Azure Lighthouse so the MSSP tenant could access 
 </p>
 
 ### Testing customer 1 SOC response access
-- We tested the Entra Entitlement Management workflow using the MSSP analyst identity analyst1@camphorclavis.com. The analyst signed in to myaccess.microsoft.com, but the general Access Packages view showed no available packages because it was displaying packages from the analyst’s home tenant. We therefore identified the need to use the specific My Access portal link for Customer 1 SOC Response Access from the Customer 1 tenant.
+- We tested the Entra Entitlement Management workflow using the MSSP analyst identity `analyst1@camphorclavis.com`. The analyst signed in to myaccess.microsoft.com, but the general Access Packages view showed no available packages because it was displaying packages from the analyst’s home tenant. We therefore identified the need to use the specific My Access portal link for Customer 1 SOC Response Access from the Customer 1 tenant.
 
 <p align="center">
   <img src="https://github.com/NgethaWachira/Building-a-Simulated-MSSP-Environment/blob/01d9f41f60a76ceed15503d4f86e7ad4fc6ac8fb/Images/95.png" width="700" />
@@ -480,16 +482,16 @@ The next step was to configure Azure Lighthouse so the MSSP tenant could access 
 </p>
 
 ### Access package approval troubleshooting
-- We attempted to approve the Customer 1 SOC Response Access request submitted by analyst1@camphorclavis.com. The pending request was visible in the Customer 1 Entitlement Management interface, but there was no Approvals option in the available Access Management navigation, and the request itself was not directly clickable. 
+- We attempted to approve the Customer 1 SOC Response Access request submitted by `analyst1@camphorclavis.com`. The pending request was visible in the Customer 1 Entitlement Management interface, but there was no Approvals option in the available Access Management navigation, and the request itself was not directly clickable. 
 
-- We therefore determined that the approval workflow needed to be accessed through the My Access portal using the Customer 1 administrator identity CamphorCust@CamphorCustomer1.onmicrosoft.com, where the pending request should be available for approval.
+- We therefore determined that the approval workflow needed to be accessed through the My Access portal using the Customer 1 administrator identity `CamphorCust@CamphorCustomer1.onmicrosoft.com`, where the pending request should be available for approval.
 
 <p align="center">
   <img src="https://github.com/NgethaWachira/Building-a-Simulated-MSSP-Environment/blob/01d9f41f60a76ceed15503d4f86e7ad4fc6ac8fb/Images/97.png" width="700" />
 </p>
 
 ### Tenant signin branding and identification
-- We configured Microsoft Entra Company Branding for Customer 1 to display the Camphor Customer 1 name and branding on the Microsoft sign-in page. We tested the branding with the native CamphorCust@CamphorCustomer1.onmicrosoft.com account and separately considered the experience for guest analysts such as analyst1@camphorclavis.com. 
+- We configured Microsoft Entra Company Branding for Customer 1 to display the Camphor Customer 1 name and branding on the Microsoft sign-in page. We tested the branding with the native `CamphorCust@CamphorCustomer1.onmicrosoft.com` account and separately considered the experience for guest analysts such as `analyst1@camphorclavis.com`. 
 
 - Testing confirmed that Company Branding applies to the Microsoft sign-in page but does not show the customer’s branding inside the Microsoft Defender portal yet.
 
@@ -497,13 +499,46 @@ The next step was to configure Azure Lighthouse so the MSSP tenant could access 
   <img src="https://github.com/NgethaWachira/Building-a-Simulated-MSSP-Environment/blob/63effc045fd4c60398cc4f64709914c15ad2e90a/Images/99a.png" width="450" />
 </p>
 
+### Azure key vault setup
+- The Function App secrets are not yet stored in Azure Key Vault. Since I prefer using the Azure Portal, I switch to the portal-based approach and created the Key Vault under the Camphor Clavis MSSP subscription in rg-triage-lab
 
+<p align="center">
+  <img src="https://github.com/NgethaWachira/Building-a-Simulated-MSSP-Environment/blob/6cab1a3742b445279c98c5de5ec86fc65315abbd/Images/100.png" width="500" />
+  <br>
+  <img src="https://github.com/NgethaWachira/Building-a-Simulated-MSSP-Environment/blob/6cab1a3742b445279c98c5de5ec86fc65315abbd/Images/101.png" width="500" />
+</p>
 
+### Key valut secret permissions
+- After creating the Key Vault, I attempted to add the anthropic-api-key secret but receive an “The operation is not allowed by RBAC” error. The Key Vault uses Azure RBAC, so creating the vault does not automatically give me permission to create secrets.
 
+- I resolved this by assigning myself, `mssptriagelabke@outlook.com`, the Key Vault Secrets Officer role under the vault's Access control (IAM). After the role assignment propagates, I can create and manage the required secrets. The Function App will later receive the narrower Key Vault Secrets User role so it can only read the secrets.
 
+<p align="center">
+  <img src="https://github.com/NgethaWachira/Building-a-Simulated-MSSP-Environment/blob/9901e1cca670fec2e3381f937dae437f60898d49/Images/102a.png" width="500" />
+  <br>
+  <img src="https://github.com/NgethaWachira/Building-a-Simulated-MSSP-Environment/blob/9901e1cca670fec2e3381f937dae437f60898d49/Images/103.png" width="500" />
+</p>
 
+### Function app key vault access
+- We assigned the Key Vault Secrets User role to the func-mssp-triage2 Function App's managed identity. This gives the Function App read-only access to the secrets stored in the Key Vault without permission to create, modify, or delete them. 
 
+- With the role assignment completed, the Function App is ready to use the Key Vault secrets through Key Vault references instead of storing the API keys directly in its environment variables.
 
+<p align="center">
+  <img src="https://github.com/NgethaWachira/Building-a-Simulated-MSSP-Environment/blob/4e61c1b52c793ab9893cfd679f32db459db77d45/Images/104a.png" width="700" />
+</p>
+
+### Key vault migration validation
+- We updated the ANTHROPIC_API_KEY and FRESHSERVICE_API_KEY environment variables in func-mssp-triage2 to use unversioned Azure Key Vault references, allowing the Function App to use the latest version of each secret automatically. We then tested the Function App using a known Customer 1 incident through Azure Cloud Shell.
+
+- The test completed successfully, confirming that the Function App could retrieve the vaulted credentials and continue the full investigation workflow, including generating KQL queries and reaching an automated verdict.
+
+## Conclusion
+- This project delivered a working, end-to-end simulation of an MSSP’s core technical operations: multi-tenant delegated access, a fully licensed and instrumented client environment, an AI-driven investigation and triage pipeline validated against real security incidents, a genuine client-facing escalation workflow, real endpoint enrollment, and a governed, scalable model for granting analysts the access they need across client tenants.
+
+<p align="center">
+  <img src="https://github.com/NgethaWachira/Building-a-Simulated-MSSP-Environment/blob/2170acd228d1c68c4df1ec5a61da10e5d6821cbd/Images/Done%20and%20Done.png" width="500" />
+</p>
 
 
 
