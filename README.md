@@ -99,7 +99,7 @@ The broader aim was to demonstrate how modern security operations can be integra
 - Next we created the Log Analytics workspace, configuring basic cost-control tags, and then enabling Microsoft Sentinel on that workspace. The final state was law-customer1, in resource group rg-customer1-soc, located in South Africa North, under the Camphor Customer 1 subscription. Once the workspace appeared in the Sentinel creation page, it was ready to have Sentinel enabled and configured.
 
 <p align="center">
-  <img src="https://github.com/NgethaWachira/Building-a-Simulated-MSSP-Environment/blob/dc9b4b454ffd209e9fdb7baf3e469caf45eaf6bd/Images/24.png" width="700" />
+  <img src="https://github.com/NgethaWachira/Building-a-Simulated-MSSP-Environment/blob/dc9b4b454ffd209e9fdb7baf3e469caf45eaf6bd/Images/24.png" width="450" />
 </p>
 
 ### Setting the daily ingestion cap first
