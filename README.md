@@ -296,7 +296,7 @@ The next step was to configure Azure Lighthouse so the MSSP tenant could access 
 </p>
 
 ### Customer 1 automation rule verification
-- The rule is Active, triggers when an incident is created, and its action is correctly configured as Run Logic App playbook: la-sentinel-relay-customer1. This confirms that the Customer 1 incident flow is connected to the dedicated relay rather than the MSSP relay. The expected workflow is now new incident in law-customer1 → automation rule → la-sentinel-relay-customer1 → HTTP POST to func-mssp-triage2 → Claude investigation → shadow-mode results returned to the incident. 
+- The rule is Active, triggers when an incident is created, and its action is correctly configured as Run Logic App playbook: la-sentinel-relay-customer1. This confirms that the Customer 1 incident flow is connected to the dedicated relay rather than the MSSP relay. The expected workflow is now new incident in law-customer1 > automation rule > la-sentinel-relay-customer1 > HTTP POST to func-mssp-triage2 > Claude investigation > shadow-mode results returned to the incident. 
 
 - The next step was to generate a fresh test incident and verify the complete flow.
 
@@ -391,7 +391,7 @@ The next step was to configure Azure Lighthouse so the MSSP tenant could access 
 </p>
 
 ### Freshservice API intergration access
-- We identified Integration Users under Freshservice Admin → User Management as the appropriate method for automated API access. Instead of using a personal agent API key, we created a dedicated integration user for the MSSP automation and assigned the required ticket permissions. We then used the integration user's API key to test the Freshservice API. 
+- We identified Integration Users under Freshservice Admin > User Management as the appropriate method for automated API access. Instead of using a personal agent API key, we created a dedicated integration user for the MSSP automation and assigned the required ticket permissions. We then used the integration user's API key to test the Freshservice API. 
 
 - The request to `https://camphorclavis.freshservice.com/api/v2/tickets` returned {"tickets":[]}, confirming that API authentication and access were working successfully.
 
