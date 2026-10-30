@@ -60,7 +60,7 @@ The broader aim was to demonstrate how modern security operations can be integra
 </p>
 
 ### Cost reality check
-- We monitored the project costs to avoid unexpected charges. Sentinel ingestion was kept at a low level across the tenant, while Microsoft 365 E5 licenses were used only where needed. Budget alerts were configured in Azure Cost Management so we could receive notifications before costs increased significantly. Once the required testing was completed, unnecessary ingestion and licenses were paused rather than running continuously.  
+- I monitored the project costs to avoid unexpected charges. Sentinel ingestion was kept at a low level across the tenant, while Microsoft 365 E5 licenses were used only where needed. Budget alerts were configured in Azure Cost Management so i could receive notifications before costs increased significantly. Once the required testing was completed, unnecessary ingestion and licenses were paused rather than running continuously.  
 
 <p align="center">
   <img src="https://github.com/NgethaWachira/Building-a-Simulated-MSSP-Environment/blob/8548bbb1506cff6b49917caa373a64dab2075365/Images/5.png" width="350" />
@@ -68,7 +68,7 @@ The broader aim was to demonstrate how modern security operations can be integra
 </p>
 
 ### Consolidating to just Customer 1
-- After encountering repeated Microsoft restrictions while creating additional customer tenants, we decided to consolidate the lab into Customer 1. The plan was to use this single tenant to host all required telemetry sources, including Microsoft Defender XDR, Cloud Apps, Office 365, Entra ID identity data, and Intune. This simplified the environment while still providing diverse data for testing the SOC automation and investigation pipeline.
+- After encountering repeated Microsoft restrictions while creating additional customer tenants, i decided to consolidate the lab into Customer 1. The plan was to use this single tenant to host all required telemetry sources, including Microsoft Defender XDR, Cloud Apps, Office 365, Entra ID identity data, and Intune. This simplified the environment while still providing diverse data for testing the SOC automation and investigation pipeline.
 
 ### “No business presence” blocked all self-service purchasing
 - A newly created Entra ID tenant (with no Microsoft 365 service ever purchased) could not be used to buy Microsoft 365 E5 directly — the retail storefront requires an existing commercial relationship (“business presence”) before it will sell into that tenant, but establishing that presence normally requires making a purchase, creating a circular blocker.
@@ -96,7 +96,7 @@ The broader aim was to demonstrate how modern security operations can be integra
 </p>
 
 ### Creating the Log Analytics workspace + Sentinel
-- Next we created the Log Analytics workspace, configuring basic cost-control tags, and then enabling Microsoft Sentinel on that workspace. The final state was law-customer1, in resource group rg-customer1-soc, located in South Africa North, under the Camphor Customer 1 subscription. Once the workspace appeared in the Sentinel creation page, it was ready to have Sentinel enabled and configured.
+- Next i created the Log Analytics workspace, configuring basic cost-control tags, and then enabled Microsoft Sentinel on that workspace. The final state was law-customer1, in resource group rg-customer1-soc, located in South Africa North, under the Camphor Customer 1 subscription. Once the workspace appeared in the Sentinel creation page, it was ready to have Sentinel enabled and configured.
 
 <p align="center">
   <img src="https://github.com/NgethaWachira/Building-a-Simulated-MSSP-Environment/blob/dc9b4b454ffd209e9fdb7baf3e469caf45eaf6bd/Images/24.png" width="450" />
@@ -117,7 +117,7 @@ The broader aim was to demonstrate how modern security operations can be integra
 </p>
 
 ### Sentinel analytics rule
-- After connecting the required data sources, we configured Microsoft Sentinel Analytics rules to detect suspicious activity and generate incidents. From the available rule templates, we enabled selected rules for Microsoft Defender XDR, Microsoft Entra ID, and Microsoft 365, including the Defender XDR rule that creates Sentinel incidents from Defender alerts, sign-ins to disabled accounts, anomalous or impossible-travel sign-ins, malicious inbox rules, unusual file activity, and changes to authentication methods for privileged accounts. These rules provided the initial detection baseline for the SOC automation pipeline.
+- After connecting the required data sources, i configured Microsoft Sentinel Analytics rules to detect suspicious activity and generate incidents. From the available rule templates, i enabled selected rules for Microsoft Defender XDR, Microsoft Entra ID, and Microsoft 365, including the Defender XDR rule that creates Sentinel incidents from Defender alerts, sign-ins to disabled accounts, anomalous or impossible-travel sign-ins, malicious inbox rules, unusual file activity, and changes to authentication methods for privileged accounts. These rules provided the initial detection baseline for the SOC automation pipeline.
 
 <p align="center">
   <img src="https://github.com/NgethaWachira/Building-a-Simulated-MSSP-Environment/blob/c15bc7d83fcf64d17ed8a292e47839865e5f9b11/Images/33.png" width="700" />
@@ -142,21 +142,21 @@ The broader aim was to demonstrate how modern security operations can be integra
 ### Azure lighthouse delegation setup
 The next step was to configure Azure Lighthouse so the MSSP tenant could access Customer 1’s Sentinel environment
 #### Role definitions
-- We identified the built-in Azure roles required for the MSSP to work with Customer 1’s Sentinel environment. These included Microsoft Sentinel Contributor, Microsoft Sentinel Responder, and Reader. These roles were included in the Lighthouse delegation so the MSSP could access and manage the required Sentinel resources.
+- I identified the built-in Azure roles required for the MSSP to work with Customer 1’s Sentinel environment. These included Microsoft Sentinel Contributor, Microsoft Sentinel Responder, and Reader. These roles were included in the Lighthouse delegation so the MSSP tenant could access and manage the required Sentinel resources.
 
 <p align="center">
   <img src="https://github.com/NgethaWachira/Building-a-Simulated-MSSP-Environment/blob/ade60d734982e74814540da0c002c39ab7225afc/Images/37.png" width="700" />
 </p>
 
 #### Group creation
-- We then created a security group named Camphor Clavis SOC Analysts in Entra ID. We added the required MSSP analyst account to the group and copied the group’s Object ID from its Overview page. This Object ID was then used in the Lighthouse delegation template so access could be assigned to the group instead of an individual user.
+- I then created a security group named Camphor Clavis SOC Analysts in Entra ID. I added the required MSSP analyst account to the group and copied the group’s Object ID from its Overview page. This Object ID was then used in the Lighthouse delegation template so access could be assigned to the group instead of an individual user.
 
 <p align="center">
   <img src="https://github.com/NgethaWachira/Building-a-Simulated-MSSP-Environment/blob/ade60d734982e74814540da0c002c39ab7225afc/Images/38.png" width="700" />
 </p>
 
 #### Custom deployment
-- We signed into the Customer 1 tenant and opened Deploy a custom template in the Azure portal. We pasted the Lighthouse ARM template into the editor, replaced the placeholder with the Camphor Clavis SOC Analysts group Object ID, selected the Camphor Customer 1 subscription, and deployed the template. This published the Lighthouse delegation from Customer 1 to the MSSP tenant, allowing the assigned MSSP group to access the customer environment.
+- I signed into the Customer 1 tenant and opened Deploy a custom template in the Azure portal. I pasted the Lighthouse ARM template into the editor, replaced the placeholder with the Camphor Clavis SOC Analysts group Object ID, selected the Camphor Customer 1 subscription, and deployed the template. This published the Lighthouse delegation from Customer 1 to the MSSP tenant, allowing the assigned MSSP group to access the customer environment.
 
 <p align="center">
   <img src="https://github.com/NgethaWachira/Building-a-Simulated-MSSP-Environment/blob/ade60d734982e74814540da0c002c39ab7225afc/Images/40.png" width="390" />
@@ -164,16 +164,16 @@ The next step was to configure Azure Lighthouse so the MSSP tenant could access 
 </p>
 
 ### Lighthouse verification
-- We signed into the MSSP tenant as `mssptriagelabke@outlook.com` and checked Service providers / My customers, but Customer 1 was not listed. We then signed back into the Customer 1 tenant and opened Subscriptions > Deployments > CustomDeployment-20260912132812 to verify both the registrationDefinition and registrationAssignment, which showed provisioningState: Succeeded. 
+- I signed into the MSSP tenant as `mssptriagelabke@outlook.com` and checked Service providers / My customers, but Customer 1 was not listed. I then signed back into the Customer 1 tenant and opened Subscriptions > Deployments > CustomDeployment-20260912132812 to verify both the registrationDefinition and registrationAssignment, which showed provisioningState: Succeeded. 
 
-- We then returned to the MSSP tenant and used the direct Customer 1 subscription URL and Subscriptions page to confirm whether the delegated Camphor Customer 1 subscription and law-customer1 workspace were accessible.
+- I then returned to the MSSP tenant and used the direct Customer 1 subscription URL and Subscriptions page to confirm whether the delegated Camphor Customer 1 subscription and law-customer1 workspace were accessible.
 
 <p align="center">
   <img src="https://github.com/NgethaWachira/Building-a-Simulated-MSSP-Environment/blob/ade60d734982e74814540da0c002c39ab7225afc/Images/43.png" width="700" />
 </p>
 
 ### Workspace Manager
-- We went from the MSSP Sentinel workspace law-triage-lab to Configuration > Workspace Manager (Preview) and found that Workspace Manager was not yet enabled on the workspace. The page confirmed that at least two Sentinel workspaces, Microsoft Sentinel Contributor access on the central and member workspaces, and Azure Lighthouse for cross-tenant management were required.
+- I went from the MSSP Sentinel workspace law-triage-lab to Configuration > Workspace Manager (Preview) and found that Workspace Manager was not yet enabled on the workspace. The page confirmed that at least two Sentinel workspaces, Microsoft Sentinel Contributor access on the central and member workspaces, and Azure Lighthouse for cross-tenant management were required.
 
 <p align="center">
   <img src="https://github.com/NgethaWachira/Building-a-Simulated-MSSP-Environment/blob/ade60d734982e74814540da0c002c39ab7225afc/Images/44.png" width="700" />
@@ -185,14 +185,14 @@ The next step was to configure Azure Lighthouse so the MSSP tenant could access 
   <img src="https://github.com/NgethaWachira/Building-a-Simulated-MSSP-Environment/blob/ade60d734982e74814540da0c002c39ab7225afc/Images/45.png" width="700" />
 </p>
 
-- We managed to add the law-customer1 workspace successfully to Workspace Manager, with the page confirming “1 Members.” We then returned to the Sentinel workspace view and confirmed that law-customer1 was now registered as a managed member workspace under law-triage-lab. This completed the Workspace Manager configuration needed to manage both the MSSP workspace and the Customer 1 workspace from the central environment.
+- I managed to add the law-customer1 workspace successfully to Workspace Manager, with the page confirming “1 Members.” I then returned to the Sentinel workspace view and confirmed that law-customer1 was now registered as a managed member workspace under law-triage-lab. This completed the Workspace Manager configuration needed to manage both the MSSP workspace and the Customer 1 workspace from the central environment.
 
 <p align="center">
   <img src="https://github.com/NgethaWachira/Building-a-Simulated-MSSP-Environment/blob/ade60d734982e74814540da0c002c39ab7225afc/Images/46.png" width="700" />
 </p>
 
 ### Current MSSP environment status
-- At this stage, we have successfully connected the MSSP tenant and Customer 1 through Azure Lighthouse. Microsoft Sentinel was enabled in both environments, with XDR, Entra ID, and Microsoft 365 connectors and analytics rules configured on the Customer 1 side.
+- At this stage, i have successfully connected the MSSP tenant and Customer 1 through Azure Lighthouse. Microsoft Sentinel was enabled in both environments, with XDR, Entra ID, and Microsoft 365 connectors and analytics rules configured on the Customer 1 side.
 
 - Test activity was also flowing into Sentinel, and law-customer1 has been successfully added to Workspace Manager under the MSSP workspace law-triage-lab, establishing the foundation for centralized management of the customer environment.
 
@@ -205,7 +205,7 @@ The next step was to configure Azure Lighthouse so the MSSP tenant could access 
 ### Customer 1 sentinel relay setup
 - Lighthouse does not provide a centralized notification mechanism for new Sentinel incidents. Because the “When a Microsoft Sentinel incident is created” trigger is scoped to the customer’s Sentinel workspace, each client requires a small relay configuration consisting of a Logic App and Sentinel automation rule in that client’s environment.
 
-- The investigation and triage logic remains centralized in the MSSP’s existing func-mssp-triage2 Function App, which can be reused across all customers. From law-customer1, we'll navigate to creating the Logic App from there.
+- The investigation and triage logic remains centralized in the MSSP’s existing func-mssp-triage2 Function App, which can be reused across all customers. From law-customer1, i navigated to creating the Logic App from there.
 
 <p align="center">
   <img src="https://github.com/NgethaWachira/Building-a-Simulated-MSSP-Environment/blob/90d9d5db2d2a934f4d5840aafac83efca3987a04/Images/49.png" width="700" />
@@ -214,20 +214,20 @@ The next step was to configure Azure Lighthouse so the MSSP tenant could access 
 ### Deployment option - consumption plan
 - The hosting option for the Customer 1 relay is Consumption. This matches the existing la-sentinel-relay in rg-triage-lab and the deployment pattern used for the MSSP pipeline. Consumption provides a fully managed, multi-tenant Logic App with pay-per-operation pricing, making it suitable for an incident relay that runs only when Sentinel incidents are created. 
 
-- We therefore created la-sentinel-relay-customer1 using the Consumption plan in rg-customer1-soc, alongside law-customer1, while keeping the centralized investigation logic in func-mssp-triage2.
+- So i created la-sentinel-relay-customer1 using the Consumption plan in rg-customer1-soc, alongside law-customer1, while keeping the centralized investigation logic in func-mssp-triage2.
 
 <p align="center">
   <img src="https://github.com/NgethaWachira/Building-a-Simulated-MSSP-Environment/blob/7ae5b0eb564d44729636ea65c153b54cc6493227/Images/50.png" width="700" />
 </p>
 
 ### Gap in the delegation scope
-- We identified that the Customer 1 subscription was missing the required Microsoft.Web and Microsoft.Logic resource providers, and the MSSP delegation did not include Logic App Contributor permissions. We therefore updated the existing Azure Lighthouse delegation template by adding the Logic App Contributor role alongside the existing Sentinel Contributor, Sentinel Responder, and Reader roles. 
+- I identified that the Customer 1 subscription was missing the required Microsoft.Web and Microsoft.Logic resource providers, and the MSSP delegation did not include Logic App Contributor permissions. I therefore updated the existing Azure Lighthouse delegation template by adding the Logic App Contributor role alongside the existing Sentinel Contributor, Sentinel Responder, and Reader roles. 
 
 <p align="center">
   <img src="https://github.com/NgethaWachira/Building-a-Simulated-MSSP-Environment/blob/7ae5b0eb564d44729636ea65c153b54cc6493227/Images/51.png" width="700" />
 </p>
 
-- This is a one-time subscription-level prerequisite that must be completed by the Customer 1 native administrator, `CamphorCust@CamphorCustomer1.onmicrosoft.com`. After registration, we can return to the MSSP account and continue creating the Logic App. The updated template was deployed to Camphor Customer 1 using the same mspOfferName, updating the existing delegation rather than creating a duplicate.
+- This is a one-time subscription-level prerequisite that must be completed by the Customer 1 native administrator, `CamphorCust@CamphorCustomer1.onmicrosoft.com`. After registration, i returned to the MSSP account and continue creating the Logic App. The updated template was deployed to Camphor Customer 1 using the same mspOfferName, updating the existing delegation rather than creating a duplicate.
 
 <p align="center">
   <img src="https://github.com/NgethaWachira/Building-a-Simulated-MSSP-Environment/blob/7ae5b0eb564d44729636ea65c153b54cc6493227/Images/52.png" width="700" />
@@ -240,36 +240,36 @@ The next step was to configure Azure Lighthouse so the MSSP tenant could access 
 `mssptriagelabke@outlook.com (our MSSP tenant) > is the one who receives that delegated access, and uses it to create the Logic App, configure the Sentinel trigger, and eventually run the automation`
 
 ### Customer 1 logic app realy
-- At this stage, we deployed la-sentinel-relay-customer1 in rg-customer1-soc, using the Consumption plan in South Africa North, alongside the existing MSSP relay la-sentinel-relay. We can now proceed with configuring the Sentinel trigger on la-sentinel-relay-customer1 and select law-customer1 as the monitored workspace.
+- At this stage, i deployed la-sentinel-relay-customer1 in rg-customer1-soc, using the Consumption plan in South Africa North, alongside the existing MSSP relay la-sentinel-relay. I now proceeded with configuring the Sentinel trigger on la-sentinel-relay-customer1 and select law-customer1 as the monitored workspace.
 
 <p align="center">
   <img src="https://github.com/NgethaWachira/Building-a-Simulated-MSSP-Environment/blob/7ae5b0eb564d44729636ea65c153b54cc6493227/Images/53.png" width="700" />
 </p>
 
 ### Selecting the sentinel trigger
-- In the Logic App designer, we selected the Microsoft Sentinel incident trigger. This is the appropriate trigger for the automation because the workflow is designed to start when a Sentinel incident is created and then send the incident to the centralized triage function for investigation. 
+- In the Logic App designer, i selected the Microsoft Sentinel incident trigger. This is the appropriate trigger for the automation because the workflow is designed to start when a Sentinel incident is created and then send the incident to the centralized triage function for investigation. 
 
-- The Microsoft Sentinel alert trigger is intended for individual alerts, while Microsoft Sentinel entity is designed for entity-focused workflows. We therefore used Microsoft Sentinel incident and proceeded with the MSSP account `mssptriagelabke@outlook.com` to configure the connection and select law-customer1 as the monitored workspace.
+- The Microsoft Sentinel alert trigger is intended for individual alerts, while Microsoft Sentinel entity is designed for entity-focused workflows. I used Microsoft Sentinel incident and proceeded with the MSSP account `mssptriagelabke@outlook.com` to configure the connection and select law-customer1 as the monitored workspace.
 
 <p align="center">
   <img src="https://github.com/NgethaWachira/Building-a-Simulated-MSSP-Environment/blob/7ae5b0eb564d44729636ea65c153b54cc6493227/Images/54.png" width="700" />
 </p>
 
 ### Configuring the sentinel connection
-- For the Microsoft Sentinel incident trigger, we selected OAuth authentication and used the MSSP analyst account `mssptriagelabke@outlook.com`. The Tenant ID was left blank or set to the MSSP tenant ID 2947e56e-1901-4f69-9fc0-f9c8a7ce2cc5, since the connection authenticates the MSSP account while Azure Lighthouse provides access to the delegated Customer 1 resources. 
+- For the Microsoft Sentinel incident trigger, i selected OAuth authentication and used the MSSP analyst account `mssptriagelabke@outlook.com`. The Tenant ID was left blank or set to the MSSP tenant ID 2947e56e-1901-4f69-9fc0-f9c8a7ce2cc5, since the connection authenticates the MSSP account while Azure Lighthouse provides access to the delegated Customer 1 resources. 
 
 <p align="center">
   <img src="https://github.com/NgethaWachira/Building-a-Simulated-MSSP-Environment/blob/7ae5b0eb564d44729636ea65c153b54cc6493227/Images/55.png" width="700" />
 </p>
 
-- The connection completed successfully, showing “Connected to `live.com#mssptriagelabke@outlook.com`”, confirming that the OAuth connection was established with the correct account. We could then continue to the trigger parameters and select Camphor Customer 1 > rg-customer1-soc > law-customer1.
+- The connection completed successfully, showing “Connected to `live.com#mssptriagelabke@outlook.com`”, confirming that the OAuth connection was established with the correct account. I could then continue to the trigger parameters and select Camphor Customer 1 > rg-customer1-soc > law-customer1.
 
 <p align="center">
   <img src="https://github.com/NgethaWachira/Building-a-Simulated-MSSP-Environment/blob/7ae5b0eb564d44729636ea65c153b54cc6493227/Images/56.png" width="700" />
 </p>
 
 ### Preparing the HTTP action
-- Because the newer Microsoft Sentinel trigger does not require the subscription, resource group, or workspace to be selected during trigger configuration, the trigger setup was completed once the OAuth connection showed “Connected to `live.com#mssptriagelabke@outlook.com`”. We then moved to the HTTP action, which will send the incident data from la-sentinel-relay-customer1 to the existing func-mssp-triage2 Function App. 
+- Because the newer Microsoft Sentinel trigger does not require the subscription, resource group, or workspace to be selected during trigger configuration, the trigger setup was completed once the OAuth connection showed “Connected to `live.com#mssptriagelabke@outlook.com`”. I then moved to the HTTP action, which will send the incident data from la-sentinel-relay-customer1 to the existing func-mssp-triage2 Function App. 
 
 - Customer 1’s workspace ID was retrieved as 1c913899-5837-4bcd-9eda-316fddf4dff8. The remaining value needed to complete the HTTP request is the SentinelTriage function key, which was retrieved from Cloud Shell by telling Azure CLI which Azure subscription to work in before running the command.
 
@@ -278,7 +278,7 @@ The next step was to configure Azure Lighthouse so the MSSP tenant could access 
 </p>
 
 ### Configuring the HTTP action
-- We configured the HTTP action in la-sentinel-relay-customer1 to send a POST request to the existing func-mssp-triage2 Function App. The request uses the SentinelTriage function endpoint, with Content-Type: application/json, and passes the Sentinel incident ID, Customer 1 workspace ID 1c913899-5837-4bcd-9eda-316fddf4dff8, customer identifier customer1, and the triggering alert rule name in the request body. 
+- I configured the HTTP action in la-sentinel-relay-customer1 to send a POST request to the existing func-mssp-triage2 Function App. The request uses the SentinelTriage function endpoint, with Content-Type: application/json, and passes the Sentinel incident ID, Customer 1 workspace ID 1c913899-5837-4bcd-9eda-316fddf4dff8, customer identifier customer1, and the triggering alert rule name in the request body. 
 
 - The Logic App was then saved so it could forward Customer 1 incidents to the centralized MSSP triage function.
 
@@ -287,7 +287,7 @@ The next step was to configure Azure Lighthouse so the MSSP tenant could access 
 </p>
 
 ### Sentinel workspace model
-- Microsoft Defender portal’s primary/secondary Sentinel workspace model is designed around workspaces within the same Microsoft Entra tenant, while Azure Lighthouse delegated access does not provide the required cross-tenant Sentinel data integration in the Defender portal. Therefore, we stopped trying to connect law-triage-lab and law-customer1 through the unified Defender portal. 
+- Microsoft Defender portal’s primary/secondary Sentinel workspace model is designed around workspaces within the same Microsoft Entra tenant, while Azure Lighthouse delegated access does not provide the required cross-tenant Sentinel data integration in the Defender portal. Therefore, i stopped trying to connect law-triage-lab and law-customer1 through the unified Defender portal. 
 
 - For the Customer 1 automation rule, the appropriate next step was to work directly in the Customer 1 tenant using `CamphorCust@CamphorCustomer1.onmicrosoft.com` and configure the automation rule against law-customer1. la-sentinel-relay-customer1 now appears.
 
@@ -305,43 +305,43 @@ The next step was to configure Azure Lighthouse so the MSSP tenant could access 
 </p>
 
 ### End to end automation validation
-- We then generated a fresh test incident in law-customer1 and confirmed that the automation pipeline executed successfully. The incident received the expected shadow-mode analysis comment and tags, confirming the complete flow. This successfully validated the end-to-end SOC automation pipeline.
+- I then generated a fresh test incident in law-customer1 and confirmed that the automation pipeline executed successfully. The incident received the expected shadow-mode analysis comment and tags, confirming the complete flow. This successfully validated the end-to-end SOC automation pipeline.
 
 <p align="center">
   <img src="https://github.com/NgethaWachira/Building-a-Simulated-MSSP-Environment/blob/02ade3e429530a7817d7fbd25ff43486e108106a/Images/63.png" width="700" />
 </p>
 
 ### Device enrollment and testing process
-- We used a laptop to enroll it in Intune and generate device-related alerts for testing. The process involved joining the device to Microsoft Entra ID using a native Customer 1 account, confirming the device appeared as Microsoft Entra joined, and verifying Intune enrollment.
+- I used a laptop to enroll it in Intune and generate device-related alerts for testing. The process involved joining the device to Microsoft Entra ID using a native Customer 1 account, confirming the device appeared as Microsoft Entra joined, and verifying Intune enrollment.
 
 <p align="center">
   <img src="https://github.com/NgethaWachira/Building-a-Simulated-MSSP-Environment/blob/02ade3e429530a7817d7fbd25ff43486e108106a/Images/63.png" width="700" />
 </p>
 
-- We joined the laptop to Microsoft Entra ID using `analyst2@camphorcustomer1.onmicrosoft.com` and completed the Windows join process. After restarting the device, we verified that AzureAdJoined: Yes and MDM: Microsoft Intune confirmed successful Intune enrollment. The device was then available in the Intune and Microsoft security portals for further validation.
+- Joined the laptop to Microsoft Entra ID using `analyst2@camphorcustomer1.onmicrosoft.com` and completed the Windows join process. After restarting the device, i verified that AzureAdJoined: Yes and MDM: Microsoft Intune confirmed successful Intune enrollment. The device was then available in the Intune and Microsoft security portals for further validation.
 
 <p align="center">
   <img src="https://github.com/NgethaWachira/Building-a-Simulated-MSSP-Environment/blob/02ade3e429530a7817d7fbd25ff43486e108106a/Images/68.png" width="700" />
 </p>
 
 ### Defender for endpoint onboarding
-- We downloaded the Microsoft Defender for Endpoint onboarding script and ran it on the enrolled laptop using an elevated administrator session. After onboarding completed, the device desktop-lrpasie appeared in the Defender device inventory with an Active health state and Full security operations status.
+- I downloaded the Microsoft Defender for Endpoint onboarding script and ran it on the enrolled laptop using an elevated administrator session. After onboarding completed, the device desktop-lrpasie appeared in the Defender device inventory with an Active health state and Full security operations status.
 
 <p align="center">
   <img src="https://github.com/NgethaWachira/Building-a-Simulated-MSSP-Environment/blob/02ade3e429530a7817d7fbd25ff43486e108106a/Images/70.png" width="700" />
 </p>
 
 ### Potential DLL side-loading detection test
-- We created a Microsoft Defender for Endpoint custom detection rule to identify potential DLL side-loading from user-writable locations such as AppData, Temp, Downloads, and Desktop. The rule queries DeviceImageLoadEvents and captures the loading process, DLL path, device, account, and related process details. 
+- I created a Microsoft Defender for Endpoint custom detection rule to identify potential DLL side-loading from user-writable locations such as AppData, Temp, Downloads, and Desktop. The rule queries DeviceImageLoadEvents and captures the loading process, DLL path, device, account, and related process details. 
 
-- We then planned to download Spotify on the onboarded device as a controlled test, since its legitimate use of user-writable application paths could generate matching telemetry. The resulting alert would then be used to validate the Sentinel investigation and automation pipeline.
+- Downloaded Spotify on the onboarded device as a controlled test, since its legitimate use of user-writable application paths could generate matching telemetry. The resulting alert would then be used to validate the Sentinel investigation and automation pipeline.
 
 <p align="center">
   <img src="https://github.com/NgethaWachira/Building-a-Simulated-MSSP-Environment/blob/4a50a550df9ef262d3b8e89b72d907b7313b678c/Images/71.png" width="700" />
 </p>
 
 ### Troubleshooting customer 1 automation failure
-- We got an error, the Logic App trigger was functioning, but the HTTP action returned 500 InternalServerError. The Function App response identified the underlying issue as 403 Forbidden when accessing the Customer 1 Sentinel incident through the Azure management API. The incident input and workspace details were correct, confirming that the issue was a permissions gap for the Function App's managed identity on rg-customer1-soc. 
+- I got an error, the Logic App trigger was functioning, but the HTTP action returned 500 InternalServerError. The Function App response identified the underlying issue as 403 Forbidden when accessing the Customer 1 Sentinel incident through the Azure management API. The incident input and workspace details were correct, confirming that the issue was a permissions gap for the Function App's managed identity on rg-customer1-soc. 
 
 <p align="center">
   <img src="https://github.com/NgethaWachira/Building-a-Simulated-MSSP-Environment/blob/931bbdc91e12ff695d9476741cd1cef319734140/Images/error2.jpg" width="450" />
@@ -357,7 +357,7 @@ The next step was to configure Azure Lighthouse so the MSSP tenant could access 
 </p>
 
 ### Freshservice intergration setup
-- We began integrating Freshservice as the client escalation platform for suspicious Sentinel incidents. Freshservice was selected as the ticketing destination, using its REST API and API-key authentication. During registration, the service required a business email address, so we planned to use the existing camphorclavis.com domain to create a business-domain address through email forwarding.
+- Next was integrating Freshservice as the client escalation platform for suspicious Sentinel incidents. Freshservice was selected as the ticketing destination, using its REST API and API-key authentication. During registration, the service required a business email address, so i used the existing camphorclavis.com domain to create a business-domain address through email forwarding.
 
 - This would allow Freshservice verification messages to be forwarded to the existing Gmail inbox without requiring a separate mailbox or full email-hosting service.
 
@@ -366,14 +366,14 @@ The next step was to configure Azure Lighthouse so the MSSP tenant could access 
 </p>
 
 ### Freshservice account setup
-- The Camphor Clavis Freshservice organization was created at `camphorclavis.freshservice.com`, with James Ngetha configured as the Organization Admin. We then accessed the Freshservice administration area and identified that the AI Agents section was unrelated to the required setup. The next step was to locate the appropriate Agents and API Settings sections for the SOC integration.
+- The Camphor Clavis Freshservice organization was created at `camphorclavis.freshservice.com`, with James Ngetha configured as the Organization Admin. I then accessed the Freshservice administration area and identified that the AI Agents section was unrelated to the required setup. The next step was to locate the appropriate Agents and API Settings sections for the SOC integration.
 
 <p align="center">
   <img src="https://github.com/NgethaWachira/Building-a-Simulated-MSSP-Environment/blob/931bbdc91e12ff695d9476741cd1cef319734140/Images/74.png" width="700" />
 </p>
 
 ### Freshservice agent and API Key setup
-- We added `camphor.customer1@outlook.com` to Freshservice as the Customer 1 Security Admin agent, using the Yogi Bear security-admin persona. Freshservice then confirmed that API key access had been enabled for the account and indicated that the key could be accessed through Profile Settings.
+- I added `camphor.customer1@outlook.com` to Freshservice as the Customer 1 Security Admin agent, using the Yogi Bear security-admin persona. Freshservice then confirmed that API key access had been enabled for the account and indicated that the key could be accessed through Profile Settings.
 
 - Because the API key belongs to `camphor.customer1@outlook.com`, rather than the `contact@camphorclavis.com` organization-admin account, we needed to access Freshservice under the Customer 1 agent identity to retrieve the key.
 
@@ -382,7 +382,7 @@ The next step was to configure Azure Lighthouse so the MSSP tenant could access 
 </p>
 
 ### Freshservice API access testing
-- We retrieved the Freshservice API key from the Yogi Bear agent account and proceeded to test API access from Azure Cloud Shell while signed in through the MSSP tenant. The request to `https://camphorclavis.freshservice.com/api/v2/tickets` returned an access_denied response with the message “You are not authorized to perform this action.”
+- I retrieved the Freshservice API key from the Yogi Bear agent account and proceeded to test API access from Azure Cloud Shell while signed in through the MSSP tenant. The request to `https://camphorclavis.freshservice.com/api/v2/tickets` returned an access_denied response with the message “You are not authorized to perform this action.”
 
 - This indicated that although the API key had been retrieved successfully, further investigation was required to determine why the Freshservice API request was not authorized before continuing with the Function App integration.
 
@@ -391,12 +391,12 @@ The next step was to configure Azure Lighthouse so the MSSP tenant could access 
 </p>
 
 ### Freshservice API intergration access
-- We identified Integration Users under Freshservice Admin > User Management as the appropriate method for automated API access. Instead of using a personal agent API key, we created a dedicated integration user for the MSSP automation and assigned the required ticket permissions. We then used the integration user's API key to test the Freshservice API. 
+- I identified Integration Users under Freshservice Admin > User Management as the appropriate method for automated API access. Instead of using a personal agent API key, i created a dedicated integration user for the MSSP automation and assigned the required ticket permissions. I then used the integration user's API key to test the Freshservice API. 
 
 - The request to `https://camphorclavis.freshservice.com/api/v2/tickets` returned {"tickets":[]}, confirming that API authentication and access were working successfully.
 
 ### Freshservice configuration and function app preparation
-- We identified Yogi Bear’s Freshservice responder ID as 41001012787 and prepared the required Function App settings: FRESHSERVICE_DOMAIN, FRESHSERVICE_API_KEY, and FRESHSERVICE_RESPONDER_ID. Because the newer Azure portal layout uses Environment variables instead of the previous Application Settings location, we added each setting using its Name and Value fields and saved the configuration.
+- I identified Yogi Bear’s Freshservice responder ID as 41001012787 and prepared the required Function App settings: FRESHSERVICE_DOMAIN, FRESHSERVICE_API_KEY, and FRESHSERVICE_RESPONDER_ID. Because the newer Azure portal layout uses Environment variables instead of the previous Application Settings location, i added each setting using its Name and Value fields and saved the configuration.
 
 - The next step is to update function_app.py with the Freshservice ticket-creation logic, using the current version of the file to ensure the changes are added correctly
 
@@ -405,7 +405,7 @@ The next step was to configure Azure Lighthouse so the MSSP tenant could access 
 </p>
 
 ### Freshservice ticket creation intergration
-- We reviewed the current function_app.py and integrated Freshservice ticket creation into the existing Sentinel auto-triage workflow. The changes added Freshservice environment variables, a create_freshservice_ticket() function, and the required take_action() and triage() updates. Tickets are created only when an incident is classified as Suspicious, keeping Freshservice escalation aligned with the escalation-required Sentinel tag.
+- I reviewed the current function_app.py and integrated Freshservice ticket creation into the existing Sentinel auto-triage workflow. The changes added Freshservice environment variables, a create_freshservice_ticket() function, and the required take_action() and triage() updates. Tickets are created only when an incident is classified as Suspicious, keeping Freshservice escalation aligned with the escalation-required Sentinel tag.
 
 - The ticket includes the investigation summary, key entities, recommendations, and correlation ID, while Freshservice failures are logged without interrupting the core Sentinel triage process. Before deployment, FRESHSERVICE_REQUESTER_EMAIL was added to the Function App environment variables.
 
@@ -419,7 +419,7 @@ The next step was to configure Azure Lighthouse so the MSSP tenant could access 
 </p>
 
 ### Defender XDR RBAC roles
-- While configuring the planned analyst response access, the expected Defender XDR Roles section was not visible in the initial settings area. We identified that the relevant location was Permissions and roles, rather than the general Defender XDR settings page.
+- While configuring the planned analyst response access, the expected Defender XDR Roles section was not visible in the initial settings area. I identified that the relevant location was Permissions and roles, rather than the general Defender XDR settings page.
 
 - The investigation then focused on whether Microsoft Defender for Endpoint unified RBAC was already active in Customer 1 and where the available Roles section was exposed. The next step was to locate the Roles page or use the Defender portal search to identify the correct RBAC configuration area.
 
@@ -428,14 +428,14 @@ The next step was to configure Azure Lighthouse so the MSSP tenant could access 
 </p>
 
 ### Analyst response actions
-- We planned to extend the MSSP environment with controlled analyst response actions and scalable client access. In Customer 1, analysts would receive scoped Defender XDR permissions for actions such as device isolation and an Entra ID role such as Helpdesk Administrator for password resets.
+- I planned to extend the MSSP environment with controlled analyst response actions and scalable client access. In Customer 1, analysts would receive scoped Defender XDR permissions for actions such as device isolation and an Entra ID role such as Helpdesk Administrator for password resets.
 
 <p align="center">
   <img src="https://github.com/NgethaWachira/Building-a-Simulated-MSSP-Environment/blob/bc1bd9dbf0218ba3a412ecebb8f9bca89255d1cc/Images/83.png" width="700" />
 </p>
 
 ### SOC analyst response group assignment
-- We created the SOC-Analysts-Response security group and used it as the required assignment for the Defender response role. This group provides a central way to manage the analysts who will receive the scoped response permissions.
+- I created the SOC-Analysts-Response security group and used it as the required assignment for the Defender response role. This group provides a central way to manage the analysts who will receive the scoped response permissions.
 
 <p align="center">
   <img src="https://github.com/NgethaWachira/Building-a-Simulated-MSSP-Environment/blob/bc1bd9dbf0218ba3a412ecebb8f9bca89255d1cc/Images/86.png" width="700" />
@@ -449,16 +449,16 @@ The next step was to configure Azure Lighthouse so the MSSP tenant could access 
 </p>
 
 ### Role assignable security group configuration
-- We found that SOC-Analysts-Response was created as a standard Security group and therefore was not available when assigning the Entra Helpdesk Administrator role. The group needed to be created with Microsoft Entra roles can be assigned to this group enabled at creation time.
+- I found that SOC-Analysts-Response was created as a standard Security group and therefore was not available when assigning the Entra Helpdesk Administrator role. The group needed to be created with Microsoft Entra roles can be assigned to this group enabled at creation time.
 
-- We therefore created a new role-assignable SOC-Analysts-Response group, re-pointed the Defender custom role assignment to the new group, and then used the same group for the Entra password-reset role. This ensured both role assignments were managed through a single group.
+- I therefore created a new role-assignable SOC-Analysts-Response group, re-pointed the Defender custom role assignment to the new group, and then used the same group for the Entra password-reset role. This ensured both role assignments were managed through a single group.
 
 <p align="center">
   <img src="https://github.com/NgethaWachira/Building-a-Simulated-MSSP-Environment/blob/01d9f41f60a76ceed15503d4f86e7ad4fc6ac8fb/Images/84a.png" width="700" />
 </p>
 
 ### Entra entitlement management configuration
-- We registered Camphor Clavis MSSP as a Connected Organization with the description “MSSP partner tenant providing SOC analyst services for Camphor Customer 1” and set its state to Configured. We then created the SOC Access catalog, added the SOC-Analysts-Response group as a resource, and created the Customer 1 SOC Response Access package. 
+- I registered Camphor Clavis MSSP as a Connected Organization with the description “MSSP partner tenant providing SOC analyst services for Camphor Customer 1” and set its state to Configured. Then created the SOC Access catalog, added the SOC-Analysts-Response group as a resource, and created the Customer 1 SOC Response Access package. 
 
 - The package was configured for external self-service requests, approval, requestor justification, and time-limited access with lifecycle controls.
 
@@ -469,7 +469,7 @@ The next step was to configure Azure Lighthouse so the MSSP tenant could access 
 </p>
 
 ### Testing customer 1 SOC response access
-- We tested the Entra Entitlement Management workflow using the MSSP analyst identity `analyst1@camphorclavis.com`. The analyst signed in to myaccess.microsoft.com, but the general Access Packages view showed no available packages because it was displaying packages from the analyst’s home tenant. We therefore identified the need to use the specific My Access portal link for Customer 1 SOC Response Access from the Customer 1 tenant.
+- I tested the Entra Entitlement Management workflow using the MSSP analyst identity `analyst1@camphorclavis.com`. The analyst signed in to myaccess.microsoft.com, but the general Access Packages view showed no available packages because it was displaying packages from the analyst’s home tenant. I therefore identified the need to use the specific My Access portal link for Customer 1 SOC Response Access from the Customer 1 tenant.
 
 <p align="center">
   <img src="https://github.com/NgethaWachira/Building-a-Simulated-MSSP-Environment/blob/01d9f41f60a76ceed15503d4f86e7ad4fc6ac8fb/Images/95.png" width="700" />
@@ -482,16 +482,16 @@ The next step was to configure Azure Lighthouse so the MSSP tenant could access 
 </p>
 
 ### Access package approval troubleshooting
-- We attempted to approve the Customer 1 SOC Response Access request submitted by `analyst1@camphorclavis.com`. The pending request was visible in the Customer 1 Entitlement Management interface, but there was no Approvals option in the available Access Management navigation, and the request itself was not directly clickable. 
+- I attempted to approve the Customer 1 SOC Response Access request submitted by `analyst1@camphorclavis.com`. The pending request was visible in the Customer 1 Entitlement Management interface, but there was no Approvals option in the available Access Management navigation, and the request itself was not directly clickable. 
 
-- We therefore determined that the approval workflow needed to be accessed through the My Access portal using the Customer 1 administrator identity `CamphorCust@CamphorCustomer1.onmicrosoft.com`, where the pending request should be available for approval.
+- Then determined that the approval workflow needed to be accessed through the My Access portal using the Customer 1 administrator identity `CamphorCust@CamphorCustomer1.onmicrosoft.com`, where the pending request should be available for approval.
 
 <p align="center">
   <img src="https://github.com/NgethaWachira/Building-a-Simulated-MSSP-Environment/blob/01d9f41f60a76ceed15503d4f86e7ad4fc6ac8fb/Images/97.png" width="700" />
 </p>
 
 ### Tenant signin branding and identification
-- We configured Microsoft Entra Company Branding for Customer 1 to display the Camphor Customer 1 name and branding on the Microsoft sign-in page. We tested the branding with the native `CamphorCust@CamphorCustomer1.onmicrosoft.com` account and separately considered the experience for guest analysts such as `analyst1@camphorclavis.com`. 
+- I configured Microsoft Entra Company Branding for Customer 1 to display the Camphor Customer 1 name and branding on the Microsoft sign-in page. Tested the branding with the native `CamphorCust@CamphorCustomer1.onmicrosoft.com` account and separately considered the experience for guest analysts such as `analyst1@camphorclavis.com`. 
 
 - Testing confirmed that Company Branding applies to the Microsoft sign-in page but does not show the customer’s branding inside the Microsoft Defender portal yet.
 
@@ -520,7 +520,7 @@ The next step was to configure Azure Lighthouse so the MSSP tenant could access 
 </p>
 
 ### Function app key vault access
-- We assigned the Key Vault Secrets User role to the func-mssp-triage2 Function App's managed identity. This gives the Function App read-only access to the secrets stored in the Key Vault without permission to create, modify, or delete them. 
+- I assigned the Key Vault Secrets User role to the func-mssp-triage2 Function App's managed identity. This gives the Function App read-only access to the secrets stored in the Key Vault without permission to create, modify, or delete them. 
 
 - With the role assignment completed, the Function App is ready to use the Key Vault secrets through Key Vault references instead of storing the API keys directly in its environment variables.
 
@@ -529,7 +529,7 @@ The next step was to configure Azure Lighthouse so the MSSP tenant could access 
 </p>
 
 ### Key vault migration validation
-- We updated the ANTHROPIC_API_KEY and FRESHSERVICE_API_KEY environment variables in func-mssp-triage2 to use unversioned Azure Key Vault references, allowing the Function App to use the latest version of each secret automatically. We then tested the Function App using a known Customer 1 incident through Azure Cloud Shell.
+- I updated the ANTHROPIC_API_KEY and FRESHSERVICE_API_KEY environment variables in func-mssp-triage2 to use unversioned Azure Key Vault references, allowing the Function App to use the latest version of each secret automatically. We then tested the Function App using a known Customer 1 incident through Azure Cloud Shell.
 
 - The test completed successfully, confirming that the Function App could retrieve the vaulted credentials and continue the full investigation workflow, including generating KQL queries and reaching an automated verdict.
 
@@ -537,6 +537,41 @@ The next step was to configure Azure Lighthouse so the MSSP tenant could access 
 - This project delivered a working, end-to-end simulation of an MSSP’s core technical operations: multi-tenant delegated access, a fully licensed and instrumented client environment, an AI-driven investigation and triage pipeline validated against real security incidents, a genuine client-facing escalation workflow, real endpoint enrollment, and a governed, scalable model for granting analysts the access they need across client tenants.</br></br>
 <p align="center">
   <img src="https://github.com/NgethaWachira/Building-a-Simulated-MSSP-Environment/blob/850b42063ad5c02fc0cbdab1263bb0ef89269599/Images/Done%20and%20Done.png" width="500" />
+</p>
+
+</br></br>
+```text
+██████   ██   ██   █████   ███████  ███████    ██████
+██   ██  ██   ██  ██   ██  ██       ██              ██
+██████   ███████  ███████  ███████  █████       █████
+██       ██   ██  ██   ██       ██  ██         ██
+██       ██   ██  ██   ██  ███████  ███████    ███████
+```
+
+## Hardening of a Microsoft 365 and Entra ID Tenant
+Hardened a Microsoft 365 tenant end to end across Entra ID (PIM, Conditional Access, break-glass), Intune, Defender for Endpoint and Office 365, Sentinel, SSO/SCIM and email authentication, then benchmarked it against CIS with Maester and documented it in runbooks and policies
+
+### Emergency Access Accounts and Break-Glass Configuration
+- I configured a dedicated break-glass accounts, bg-emer01, with permanent Global Administrator privileges to ensure emergency access to the Customer 1 tenant if normal administrator accounts become unavailable.
+
+<p align="center">
+  <img src="https://github.com/NgethaWachira/Building-a-Simulated-MSSP-Environment/blob/51fa0a427dc28f87eac60e1f7e465612ca1a5d2b/Images/109.png" width="430" />
+  <img src="https://github.com/NgethaWachira/Building-a-Simulated-MSSP-Environment/blob/51fa0a427dc28f87eac60e1f7e465612ca1a5d2b/Images/111.png" width="270" />
+</p>
+
+- I also created the CA-Exclude-EmergencyAccess security group, added account to it, and used it to exclude them from Conditional Access policies. I configured phishing-resistant MFA using FIDO2 security keys and stored the credentials and keys separately.
+
+<p align="center">
+  <img src="https://github.com/NgethaWachira/Building-a-Simulated-MSSP-Environment/blob/51fa0a427dc28f87eac60e1f7e465612ca1a5d2b/Images/112.png" width="295" />
+  <img src="https://github.com/NgethaWachira/Building-a-Simulated-MSSP-Environment/blob/51fa0a427dc28f87eac60e1f7e465612ca1a5d2b/Images/116.png" width="405" />
+</p>
+
+- To monitor their use, i configured Microsoft Entra diagnostic logs to flow into Microsoft Sentinel and created two high-severity analytics rules to detect break-glass account sign-ins and changes to the emergency accounts or exclusion group. Finally, i tested both accounts and verified that the expected alerts appeared in Sentinel.
+
+<p align="center">
+  <img src="https://github.com/NgethaWachira/Building-a-Simulated-MSSP-Environment/blob/51fa0a427dc28f87eac60e1f7e465612ca1a5d2b/Images/117.png" width="700" />
+  <br>
+  <img src="https://github.com/NgethaWachira/Building-a-Simulated-MSSP-Environment/blob/51fa0a427dc28f87eac60e1f7e465612ca1a5d2b/Images/118.png" width="700" />
 </p>
 
 
