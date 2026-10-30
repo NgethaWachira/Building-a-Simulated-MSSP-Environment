@@ -574,6 +574,24 @@ Hardened a Microsoft 365 tenant end to end across Entra ID (PIM, Conditional Acc
   <img src="https://github.com/NgethaWachira/Building-a-Simulated-MSSP-Environment/blob/51fa0a427dc28f87eac60e1f7e465612ca1a5d2b/Images/118.png" width="700" />
 </p>
 
+## Privileged Identity Management and Just-in-Time Access
+- I configured Microsoft Entra Privileged Identity Management (PIM) to reduce the need for permanent administrative access. I set the Global Administrator role to require MFA, justification, and approval, with a maximum activation period of four hours.
+
+<p align="center">
+  <img src="https://github.com/NgethaWachira/Building-a-Simulated-MSSP-Environment/blob/3aad5abfd02867ebcbfdf7d62bef79c1d1ff0ebb/Images/120.png" width="700" />
+</p>
+
+- I then made CamphorCust eligible for Global Administrator, tested the activation and approval workflow, and removed its permanent active assignment only after confirming that activation worked.  I also separated routine administration from emergency access by making CamphorCust eligible for Security Administrator
+
+<p align="center">
+  <img src="https://github.com/NgethaWachira/Building-a-Simulated-MSSP-Environment/blob/3aad5abfd02867ebcbfdf7d62bef79c1d1ff0ebb/Images/123.png" width="700" />
+</p>
+
+
+
+
+
+
 
 
 
