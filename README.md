@@ -574,7 +574,7 @@ Hardened a Microsoft 365 tenant end to end across Entra ID (PIM, Conditional Acc
   <img src="https://github.com/NgethaWachira/Building-a-Simulated-MSSP-Environment/blob/51fa0a427dc28f87eac60e1f7e465612ca1a5d2b/Images/118.png" width="700" />
 </p>
 
-## Privileged Identity Management and Just-in-Time Access
+### Privileged Identity Management and Just-in-Time Access
 - I configured Microsoft Entra Privileged Identity Management (PIM) to reduce the need for permanent administrative access. I set the Global Administrator role to require MFA, justification, and approval, with a maximum activation period of four hours.
 
 <p align="center">
@@ -587,7 +587,30 @@ Hardened a Microsoft 365 tenant end to end across Entra ID (PIM, Conditional Acc
   <img src="https://github.com/NgethaWachira/Building-a-Simulated-MSSP-Environment/blob/3aad5abfd02867ebcbfdf7d62bef79c1d1ff0ebb/Images/123.png" width="700" />
 </p>
 
+### Configuring Just-in-Time Sentinel Access
+- I confirmed that the Customer 1 subscription was visible in Azure resources and selected the resource group containing the Sentinel workspace to keep permissions scoped to the required environment. I then made CamphorCust permanently eligible for Microsoft Sentinel Contributor and Microsoft Sentinel Responder, configuring both roles to require MFA and justification
 
+<p align="center">
+  <img src="https://github.com/NgethaWachira/Building-a-Simulated-MSSP-Environment/blob/b783227ea48d38f2e3e8cbb14a7883e5b511bd2f/Images/124.png" width="700" />
+  <br>
+  <img src="https://github.com/NgethaWachira/Building-a-Simulated-MSSP-Environment/blob/b783227ea48d38f2e3e8cbb14a7883e5b511bd2f/Images/126.png" width="700" />
+</p>
+
+### Replacing Security Defaults with Conditional Access Policies
+- I prepared the Customer 1 tenant to use Microsoft Entra Conditional Access for more controlled protection. I disabled Security Defaults to allow custom Conditional Access policies to be configured, selecting the option indicating that the organization planned to use Conditional Access.
+
+<p align="center">
+  <img src="https://github.com/NgethaWachira/Building-a-Simulated-MSSP-Environment/blob/b783227ea48d38f2e3e8cbb14a7883e5b511bd2f/Images/127.png" width="700" />
+</p>
+
+### Deploying Conditional Access Policies
+- I then created six policies, CA001 to CA006, covering legacy authentication blocking, MFA for administrative roles, phishing-resistant MFA for administrators, MFA for all users, sign-in risk, and user risk. I enabled CA001 and CA002 to enforce the initial protections, while keeping CA003 to CA006 in report-only mode to assess their impact before enforcement. 
+
+- I excluded the CA-Exclude-EmergencyAccess group from the policies to prevent the emergency accounts from being locked out.
+
+<p align="center">
+  <img src="https://github.com/NgethaWachira/Building-a-Simulated-MSSP-Environment/blob/b783227ea48d38f2e3e8cbb14a7883e5b511bd2f/Images/129.png" width="700" />
+</p>
 
 
 
