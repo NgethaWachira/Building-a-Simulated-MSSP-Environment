@@ -717,9 +717,9 @@ Hardened a Microsoft 365 tenant end to end across Entra ID (PIM, Conditional Acc
 </p>
 
 ### Configuring Defender for Office 365 Email Protection
-- Building on the endpoint security controls, i strengthened email protection in the Customer 1 tenant, CamphorCustomer1.onmicrosoft.com, using Microsoft Defender for Office 365 preset security policies. 
+- Building on the endpoint security controls, i strengthened email protection in the Customer 1 tenant, `CamphorCustomer1.onmicrosoft.com`, using Microsoft Defender for Office 365 preset security policies. 
 
-- I applied the Standard protection preset to all recipients and the Strict protection preset specifically to CamphorCust. I also configured impersonation protection for CamphorCust, analyst1, and analyst2, and added CamphorCustomer1.onmicrosoft.com as a protected domain. This helped protect user mailboxes against phishing, impersonation, malicious attachments, and other email-based threats.
+- I applied the Standard protection preset to all recipients and the Strict protection preset specifically to CamphorCust. I also configured impersonation protection for CamphorCust, analyst1, and analyst2, and added `CamphorCustomer1.onmicrosoft.com` as a protected domain. This helped protect user mailboxes against phishing, impersonation, malicious attachments, and other email-based threats.
 
 <p align="center">
   <img src="https://github.com/NgethaWachira/Building-a-Simulated-MSSP-Environment/blob/0d3ff0898f82236b57a31f30d973ec1a8835cc75/Images/146.png" width="700" />
@@ -735,7 +735,7 @@ Hardened a Microsoft 365 tenant end to end across Entra ID (PIM, Conditional Acc
 </p>
 
 ### Configuring DKIM and DMARC Email Authentication
-- I reviewed email authentication for CamphorCustomer1.onmicrosoft.com. Microsoft already managed SPF for the onmicrosoft.com domain, while DKIM signing was handled through Microsoft 365. I then added the DMARC TXT record through the Microsoft 365 admin center, using _dmarc as the record name and setting the policy to p=reject, with aggregate reports directed to CamphorCust@CamphorCustomer1.onmicrosoft.com.
+- I reviewed email authentication for `CamphorCustomer1.onmicrosoft.com`. Microsoft already managed SPF for the onmicrosoft.com domain, while DKIM signing was handled through Microsoft 365. I then added the DMARC TXT record through the Microsoft 365 admin center, using _dmarc as the record name and setting the policy to p=reject, with aggregate reports directed to `CamphorCust@CamphorCustomer1.onmicrosoft.com`.
 
 - This instructed receiving mail systems to reject messages claiming to originate from the domain when they failed the required authentication and alignment checks. 
 
@@ -744,7 +744,7 @@ Hardened a Microsoft 365 tenant end to end across Entra ID (PIM, Conditional Acc
 </p>
 
 ### Testing Email Authentication and Defender Protection
-- After completing the configuration, I tested email communication between CamphorCust, and an external Gmail mailbox. The inbound test message from mesainenterprisesltd@gmail.com to analyst2@camphorcustomer1.onmicrosoft.com passed SPF, DKIM, and DMARC checks and was delivered to the Inbox. I also confirmed that the outbound test email reached Gmail, with its authentication results available. 
+- After completing the configuration, I tested email communication between CamphorCust, and an external Gmail mailbox. The inbound test message from `mesainenterprisesltd@gmail.com` to `analyst2@camphorcustomer1.onmicrosoft.com` passed SPF, DKIM, and DMARC checks and was delivered to the Inbox. I also confirmed that the outbound test email reached Gmail, with its authentication results available. 
 
 - These tests provided evidence that email authentication and delivery were working, while the Defender preset policies provided additional protection against malicious and impersonation-based email threats.
 
