@@ -612,6 +612,146 @@ Hardened a Microsoft 365 tenant end to end across Entra ID (PIM, Conditional Acc
   <img src="https://github.com/NgethaWachira/Building-a-Simulated-MSSP-Environment/blob/b783227ea48d38f2e3e8cbb14a7883e5b511bd2f/Images/129.png" width="700" />
 </p>
 
+### Integrating Microsoft Intune with Microsoft Defender for Endpoint
+- I completed the connection between Microsoft Intune and Microsoft Defender for Endpoint to enable device-risk sharing and stronger compliance enforcement. The Intune connection initially remained unavailable because I had enabled the setting in Defender but had not saved the preferences. 
+
+<p align="center">
+  <img src="https://github.com/NgethaWachira/Building-a-Simulated-MSSP-Environment/blob/749f1dd1d976d6f8801c57d50ecb35e070df5daf/Images/132.png" width="700" />
+</p>
+
+- After saving the change and refreshing the Intune connector, the connection status changed to Available which was earlier grayed out. This established the integration needed for Intune to evaluate Defender device-risk information.
+
+<p align="center">
+  <img src="https://github.com/NgethaWachira/Building-a-Simulated-MSSP-Environment/blob/0d3ff0898f82236b57a31f30d973ec1a8835cc75/Images/131a.png" width="700" />
+</p>
+
+### Creating the Windows Compliance Pilot Group
+- With the Intune and Defender for Endpoint integration established, I created the Intune-Compliance-Windows-Pilot security group using assigned membership and added desktop-lrpasie as its member. This group provided a dedicated scope for testing Windows compliance requirements on the pilot device before extending the policies to other devices.
+
+<p align="center">
+  <img src="https://github.com/NgethaWachira/Building-a-Simulated-MSSP-Environment/blob/0d3ff0898f82236b57a31f30d973ec1a8835cc75/Images/133.png" width="700" />
+</p>
+
+### Configuring the Windows Compliance Baseline
+-  Next, i configured the WIN-Compliance-Baseline policy for Windows 10 and later devices. Enforcing essential security requirements, including BitLocker, Secure Boot, code integrity, TPM, firewall, and Microsoft Defender Antivirus protection. I also set the minimum operating system version to 10.0.19045 and the Microsoft Defender for Endpoint machine risk threshold to Medium. 
+
+<p align="center">
+  <img src="https://github.com/NgethaWachira/Building-a-Simulated-MSSP-Environment/blob/0d3ff0898f82236b57a31f30d973ec1a8835cc75/Images/135.png" width="700" />
+</p>
+
+### Validating Device Compliance and Investigating Configuration Errors
+-  Most security requirements were passing, but BitLocker, Secure Boot, and Code Integrity were returning errors linked to Windows Device Health Attestation (DHA). The errors, 2016345708 (SyncML 404: requested target not found), indicated that Intune could not retrieve the device's health-attestation report, rather than confirming that these security features were disabled.
+
+<p align="center">
+  <img src="https://github.com/NgethaWachira/Building-a-Simulated-MSSP-Environment/blob/0d3ff0898f82236b57a31f30d973ec1a8835cc75/Images/137.png" width="700" />
+</p>
+
+### Identifying and Correcting Windows Security Compliance Failures
+- I confirmed that the device had genuine security configuration issues rather than a reporting problem. PowerShell showed that Secure Boot was disabled, while the C: drive was fully decrypted, meaning BitLocker encryption was not enabled. Code Integrity was also affected because its health assessment depended on the Secure Boot chain. I established that Secure Boot needed to be enabled before starting BitLocker encryption
+
+<p align="center">
+  <img src="https://github.com/NgethaWachira/Building-a-Simulated-MSSP-Environment/blob/0d3ff0898f82236b57a31f30d973ec1a8835cc75/Images/138.png" width="700" />
+</p>
+
+### Enabling Secure Boot
+- I accessed the HP BIOS Setup using the startup menu rather than F9, which only opens the temporary boot device options. I used Esc during startup, followed by F10 to enter BIOS Setup, and located the Secure Boot configuration. I enabled Secure Boot, disabled Legacy Support where required, and saved the changes
+
+### Preparing BitLocker Encryption Through Intune
+- I then created the WIN-BitLocker-Baseline policy under Intune > Endpoint security > Disk encryption, configuring silent device encryption and recovery-key backup to Microsoft Entra ID. I also configured the policy to prevent BitLocker from starting until the recovery information had been stored, and assigned it to Intune-Compliance-Windows-Pilot.
+
+<p align="center">
+  <img src="https://github.com/NgethaWachira/Building-a-Simulated-MSSP-Environment/blob/0d3ff0898f82236b57a31f30d973ec1a8835cc75/Images/139.png" width="700" />
+</p>
+
+### Correcting Pilot Group Membership and Stale Device Records
+- I identified that the current device record had not yet been added to Intune-Compliance-Windows-Pilot. This meant that the compliance and BitLocker policies were not being evaluated against the correct device object. I corrected the group membership by selecting the device with Entra ID and removed outdated device entries.
+
+- This ensured that policy assignments targeted the correct enrolled device.
+
+<p align="center">
+  <img src="https://github.com/NgethaWachira/Building-a-Simulated-MSSP-Environment/blob/0d3ff0898f82236b57a31f30d973ec1a8835cc75/Images/140.png" width="700" />
+</p>
+
+### Starting and Monitoring BitLocker Encryption
+- After correcting the device membership and synchronizing it with Intune, i confirmed that BitLocker encryption had started successfully. An elevated PowerShell check returned EncryptionInProgress at 80%, using the XtsAes256 encryption method specified by the Intune policy. The ProtectionStatus was still Off because encryption had not yet completed.
+
+- Synchronization delivered the policy, while Windows handled encryption separately in the background
+
+<p align="center">
+  <img src="https://github.com/NgethaWachira/Building-a-Simulated-MSSP-Environment/blob/0d3ff0898f82236b57a31f30d973ec1a8835cc75/Images/141.jpeg" width="700" />
+</p>
+
+### Completing BitLocker Encryption and Confirming Recovery-Key Backup
+- BitLocker encryption completed successfully on DESKTOP-LRPASIE. PowerShell showed FullyEncrypted, 100% encryption, ProtectionStatus On, and XtsAes256. I also verified that the recovery key had been backed up to Entra ID before encryption finished with the drive identified as the operating system drive.
+
+<p align="center">
+  <img src="https://github.com/NgethaWachira/Building-a-Simulated-MSSP-Environment/blob/0d3ff0898f82236b57a31f30d973ec1a8835cc75/Images/142.jpeg" width="700" />
+</p>
+
+### Compliance Status Updates
+- Following synchronization, Intune’s device overview confirmed DESKTOP-LRPASIE as Compliant, the individual policy results confirmed WIN-Compliance-Baseline as compliant, and the Default Device Compliance Policy also showed Compliant. CA007 – Require compliant device is also collecting results in report-only mode.
+
+<p align="center">
+  <img src="https://github.com/NgethaWachira/Building-a-Simulated-MSSP-Environment/blob/0d3ff0898f82236b57a31f30d973ec1a8835cc75/Images/141.png" width="700" />
+</p>
+
+### Configuring the Microsoft Defender Antivirus Security Baseline
+- I created the WIN-Defender-AV-Baseline policy in Microsoft Intune using the Microsoft Defender Antivirus profile and assigned it to Intune-Compliance-Windows-Pilot. This established a consistent antivirus protection baseline for the Windows pilot device.
+
+<p align="center">
+  <img src="https://github.com/NgethaWachira/Building-a-Simulated-MSSP-Environment/blob/0d3ff0898f82236b57a31f30d973ec1a8835cc75/Images/144.png" width="700" />
+</p>
+
+### Configuring the Windows Attack Surface Reduction Baseline
+- I created the WIN-ASR-Baseline policy in Intune using the Windows Attack Surface Reduction Rules profile and assigned it to Intune-Compliance-Windows-Pilot. I configured three key protections to Block, this provided immediate protection against selected high-risk techniques while allowing me to review activity from the other rules through Defender reports and DeviceEvents before increasing enforcement.
+
+<p align="center">
+  <img src="https://github.com/NgethaWachira/Building-a-Simulated-MSSP-Environment/blob/0d3ff0898f82236b57a31f30d973ec1a8835cc75/Images/145.png" width="700" />
+</p>
+
+### Validating Microsoft Defender Antivirus and ASR Policies
+- I verified that Microsoft Defender was active on DESKTOP-LRPASIE, with tamper protection enabled, real-time protection running, and AMRunningMode set to Normal. I also inspected the applied ASR settings and confirmed that the three intended protections—vulnerable signed drivers, LSASS credential theft, and WMI event subscription persistence—were set to Block, while the remaining rules were generally in Audit mode. 
+
+<p align="center">
+  <img src="https://github.com/NgethaWachira/Building-a-Simulated-MSSP-Environment/blob/0d3ff0898f82236b57a31f30d973ec1a8835cc75/Images/146.jpeg" width="700" />
+</p>
+
+### Configuring Defender for Office 365 Email Protection
+- Building on the endpoint security controls, i strengthened email protection in the Customer 1 tenant, CamphorCustomer1.onmicrosoft.com, using Microsoft Defender for Office 365 preset security policies. 
+
+- I applied the Standard protection preset to all recipients and the Strict protection preset specifically to CamphorCust. I also configured impersonation protection for CamphorCust, analyst1, and analyst2, and added CamphorCustomer1.onmicrosoft.com as a protected domain. This helped protect user mailboxes against phishing, impersonation, malicious attachments, and other email-based threats.
+
+<p align="center">
+  <img src="https://github.com/NgethaWachira/Building-a-Simulated-MSSP-Environment/blob/0d3ff0898f82236b57a31f30d973ec1a8835cc75/Images/146.png" width="700" />
+  <br>
+  <img src="https://github.com/NgethaWachira/Building-a-Simulated-MSSP-Environment/blob/0d3ff0898f82236b57a31f30d973ec1a8835cc75/Images/147.png" width="700" />
+</p>
+
+### Enabling Safe Attachments and Safe Links
+- Extended Microsoft Defender for Office 365 protection beyond Exchange Online by enabling Safe Attachments for SharePoint, OneDrive, and Teams, activating Safe Documents, preventing users from bypassing Protected View for malicious files, and ensuring Safe Links covered Office applications. This strengthened protection against malicious links and files across Microsoft 365 services.
+
+<p align="center">
+  <img src="https://github.com/NgethaWachira/Building-a-Simulated-MSSP-Environment/blob/0d3ff0898f82236b57a31f30d973ec1a8835cc75/Images/148.png" width="700" />
+</p>
+
+### Configuring DKIM and DMARC Email Authentication
+- I reviewed email authentication for CamphorCustomer1.onmicrosoft.com. Microsoft already managed SPF for the onmicrosoft.com domain, while DKIM signing was handled through Microsoft 365. I then added the DMARC TXT record through the Microsoft 365 admin center, using _dmarc as the record name and setting the policy to p=reject, with aggregate reports directed to CamphorCust@CamphorCustomer1.onmicrosoft.com.
+
+- This instructed receiving mail systems to reject messages claiming to originate from the domain when they failed the required authentication and alignment checks. 
+
+<p align="center">
+  <img src="https://github.com/NgethaWachira/Building-a-Simulated-MSSP-Environment/blob/0d3ff0898f82236b57a31f30d973ec1a8835cc75/Images/149.png" width="700" />
+</p>
+
+### Testing Email Authentication and Defender Protection
+- After completing the configuration, I tested email communication between CamphorCust, and an external Gmail mailbox. The inbound test message from mesainenterprisesltd@gmail.com to analyst2@camphorcustomer1.onmicrosoft.com passed SPF, DKIM, and DMARC checks and was delivered to the Inbox. I also confirmed that the outbound test email reached Gmail, with its authentication results available. 
+
+- These tests provided evidence that email authentication and delivery were working, while the Defender preset policies provided additional protection against malicious and impersonation-based email threats.
+
+<p align="center">
+  <img src="https://github.com/NgethaWachira/Building-a-Simulated-MSSP-Environment/blob/0d3ff0898f82236b57a31f30d973ec1a8835cc75/Images/150.png" width="700" />
+</p>
+
 
 
 
