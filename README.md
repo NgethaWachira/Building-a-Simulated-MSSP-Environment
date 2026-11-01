@@ -535,8 +535,9 @@ The next step was to configure Azure Lighthouse so the MSSP tenant could access 
 
 ## Conclusion
 - This project delivered a working, end-to-end simulation of an MSSP’s core technical operations: multi-tenant delegated access, a fully licensed and instrumented client environment, an AI-driven investigation and triage pipeline validated against real security incidents, a genuine client-facing escalation workflow, real endpoint enrollment, and a governed, scalable model for granting analysts the access they need across client tenants.</br></br>
+
 <p align="center">
-  <img src="https://github.com/NgethaWachira/Building-a-Simulated-MSSP-Environment/blob/850b42063ad5c02fc0cbdab1263bb0ef89269599/Images/Done%20and%20Done.png" width="500" />
+  <img src="https://github.com/NgethaWachira/Building-a-Simulated-MSSP-Environment/blob/eb9a0ef560e652401196fe330155573055c669c4/Images/Thinking%20Ahead.png" width="700" />
 </p>
 
 </br></br>
@@ -987,19 +988,91 @@ Hardened a Microsoft 365 tenant end to end across Entra ID (PIM, Conditional Acc
   <img src="https://github.com/NgethaWachira/Building-a-Simulated-MSSP-Environment/blob/bcfd86b366858619ba37747f7b2b1d9aec87339f/Images/188.png" width="700" />
 </p>
 
+### Configuring OAuth User Consent Controls
+- I reviewed the Microsoft Entra enterprise application consent settings to strengthen control over third-party app access. I selected the more controlled approach of allowing user consent only for verified publishers and approved low-impact permissions. I identified basic Microsoft Graph permissions such as openid, profile, email, offline_access and User.Read for low-impact classification.
 
+<p align="center">
+  <img src="https://github.com/NgethaWachira/Building-a-Simulated-MSSP-Environment/blob/10794ba259649703c737de293819513d01c15673/Images/189.png" width="700" />
+</p>
 
+### Reviewing Existing Enterprise Applications and Permissions
+- Reviewed the existing enterprise applications and confirmed that AWS IAM Identity Center was the only third-party application identified. Verified that it had no Microsoft Graph permissions requiring admin approval, as it used SAML for sign-in and SCIM for user provisioning. Confirmed that the application was active and its SAML signing certificate was valid. No high-risk permissions were found
 
+<p align="center">
+  <img src="https://github.com/NgethaWachira/Building-a-Simulated-MSSP-Environment/blob/3ca3efceaf61b8d4df7d48a5999f06e41ab328b8/Images/190a.png" width="700" />
+</p>
 
+### Enabling the Admin Consent Request Workflow
+- Enabled the admin approval process in Microsoft Entra so users must request permission when an app needs access to sensitive company data. Assigned CamphorCust to review and approve requests, enabled email notifications and reminders, and set requests to expire after 30 days. This ensures the administrator controls which applications can access organisational information.
 
+<p align="center">
+  <img src="https://github.com/NgethaWachira/Building-a-Simulated-MSSP-Environment/blob/3ca3efceaf61b8d4df7d48a5999f06e41ab328b8/Images/191.png" width="700" />
+</p>
 
+### Developing the Automated User Offboarding Script
+- Building on the identity governance and access controls, I developed Offboard-User.ps1 to automate the user offboarding process through a single PowerShell run.
 
+- The script handled four stages. First, it secured the user's identity by blocking sign-in, revoking active sessions, resetting the password to a randomly generated value, removing assigned group memberships while skipping dynamic groups, removing active role assignments and disabling the user's devices.
 
+<p align="center">
+  <img src="https://github.com/NgethaWachira/Building-a-Simulated-MSSP-Environment/blob/70ce70832e8272aa19ca7e33d59ca2823fbfe799/Images/191a.png" width="700" />
+</p>
 
+### Preparing a Test User and Group
+- To test the script safely, I created a dedicated test account, `offboard.test@CamphorCustomer1.onmicrosoft.com`. I configured the account as Offboard Test, left it unlicensed and added it to a dedicated security group named Test-Offboard-Group. The group used assigned membership rather than dynamic membership so I could verify that the script correctly removed the user from manually assigned groups.
 
+<p align="center">
+  <img src="https://github.com/NgethaWachira/Building-a-Simulated-MSSP-Environment/blob/70ce70832e8272aa19ca7e33d59ca2823fbfe799/Images/192.png" width="700" />
+  <br>
+  <img src="https://github.com/NgethaWachira/Building-a-Simulated-MSSP-Environment/blob/70ce70832e8272aa19ca7e33d59ca2823fbfe799/Images/193.png" width="700" />
+</p>
 
+### Installing the Required PowerShell Modules
+- I installed the Microsoft Graph PowerShell SDK and Exchange Online Management modules. These provided the commands needed to manage Entra ID users, group memberships, sessions and role assignments through Microsoft Graph, as well as mailbox forwarding, shared mailbox conversion and other Exchange Online tasks.
 
+<p align="center">
+  <img src="https://github.com/NgethaWachira/Building-a-Simulated-MSSP-Environment/blob/70ce70832e8272aa19ca7e33d59ca2823fbfe799/Images/194.png" width="700" />
+</p>
 
+### Testing the Offboarding Script and Verifying Results
+- First tested the Offboard-User.ps1 script using -DryRun to preview the actions without making changes, then ran it to complete the offboarding process. Because the test user had no licence, mailbox and licence-related actions were skipped. Checked the Entra audit logs and confirmed that the account was blocked, all active sessions were revoked, group memberships were removed, and the password was successfully reset.
 
+<p align="center">
+  <img src="https://github.com/NgethaWachira/Building-a-Simulated-MSSP-Environment/blob/70ce70832e8272aa19ca7e33d59ca2823fbfe799/Images/195.png" width="700" />
+</p>
+
+### Assessing the Tenant Against the CIS Microsoft 365 Benchmark
+- Used Maester, a free PowerShell tool, to check the Customer 1 Microsoft 365 tenant's security settings against recognised security standards and Microsoft recommendations. Installed the required tools, set up the Maester test folder, and connected to Microsoft Graph using the CamphorCust administrator account. 
+
+- Ran the security assessment, which generated an HTML report in C:\Maester\test-results showing the tenant's security status and areas that may need improvement.
+
+<p align="center">
+  <img src="https://github.com/NgethaWachira/Building-a-Simulated-MSSP-Environment/blob/5d1e7f44b9c0b70ae6e285b243ce74d55bc6cdce/Images/195a.png" width="700" />
+</p>
+
+### Reviewing the Initial Maester Assessment Results
+- Many tests were skipped because only Microsoft Graph was connected, so checks for Exchange Online, Teams, and Purview could not run. The results provided an initial view of the tenant's security, but connecting the remaining services and running a CIS-specific assessment was identified as necessary for a more complete security review.
+
+<p align="center">
+  <img src="https://github.com/NgethaWachira/Building-a-Simulated-MSSP-Environment/blob/5d1e7f44b9c0b70ae6e285b243ce74d55bc6cdce/Images/196.png" width="700" />
+</p>
+
+### Analysing Failed Controls and Identifying Security Gaps
+- Key issues included incomplete Conditional Access policies, legacy authentication settings needing review, missing emergency admin account exclusions, and excessive administrator privileges assigned to admin2. Also identified improvements needed in user consent, guest access, authentication methods, Intune compliance, LAPS, and privileged-role notifications.
+
+### Security Remediation Roadmap
+- Created a security improvement plan based on the assessment, following CIS and NIST security guidelines. Prioritised fixing existing security issues and planned further improvements. This provided a clear plan for tracking and improving the organisation's security.
+
+<p align="center">
+  <img src="https://github.com/NgethaWachira/Building-a-Simulated-MSSP-Environment/blob/7bdb6edd381c6b7ca226003f95a5000d6f5f8b9c/Images/198.png" width="700" />
+</p>
+
+## Conclusion
+The project transformed the CamphorCustomer1 Microsoft 365 tenant from basic security defaults to a layered Zero Trust security environment, implementing and testing controls across identity, devices, email, applications and monitoring, while identifying remaining gaps and establishing a clear plan for continuous security improvement.
+
+<p align="center">
+  <img src="https://github.com/NgethaWachira/Building-a-Simulated-MSSP-Environment/blob/850b42063ad5c02fc0cbdab1263bb0ef89269599/Images/Done%20and%20Done.png" width="500" />
+</p>
+</br>
 
 
