@@ -837,7 +837,7 @@ Hardened a Microsoft 365 tenant end to end across Entra ID (PIM, Conditional Acc
 </p>
 
 ### Testing On-Demand Provisioning for Tom Jerry
-- With Tom Jerry assigned to the AWS enterprise application, I used Provision on demand in Microsoft Entra ID to test the SCIM integration. All four provisioning stages—Import, Scope, Match, and Action—completed successfully, and the account analyst1@CamphorCustomer1.onmicrosoft.com was created in AWS IAM Identity Center.
+- With Tom Jerry assigned to the AWS enterprise application, I used Provision on demand in Microsoft Entra ID to test the SCIM integration. All four provisioning stages—Import, Scope, Match, and Action—completed successfully, and the account `analyst1@CamphorCustomer1.onmicrosoft.com` was created in AWS IAM Identity Center.
 
 <p align="center">
   <img src="https://github.com/NgethaWachira/Building-a-Simulated-MSSP-Environment/blob/e1e2917334aa557255f57e044912d902ef001c6c/Images/164.png" width="700" />
@@ -850,7 +850,7 @@ Hardened a Microsoft 365 tenant end to end across Entra ID (PIM, Conditional Acc
 </p>
 
 ### Verifying Provisioned Users in AWS IAM Identity Center
-- I reviewed the Users section in AWS IAM Identity Center and confirmed that both lab analyst accounts had been created successfully through SCIM provisioning: analyst1@... (Tom Jerry) and analyst2@... (Homer Simpson). I also identified a third account, mesainenterprisesltd@gmail.com (camphor-lab), which was listed as Manually created. 
+- I reviewed the Users section in AWS IAM Identity Center and confirmed that both lab analyst accounts had been created successfully through SCIM provisioning: analyst1@... (Tom Jerry) and analyst2@... (Homer Simpson). I also identified a third account, `mesainenterprisesltd@gmail.com` (camphor-lab), which was listed as Manually created. 
 
 - This was an existing account retained from the earlier AWS Builder ID configuration, rather than an account created through Entra provisioning.
 
@@ -859,7 +859,7 @@ Hardened a Microsoft 365 tenant end to end across Entra ID (PIM, Conditional Acc
 </p>
 
 ### Verifying Microsoft Entra ID Sign-In to AWS
-- I also assigned CamphorCust@CamphorCustomer1.onmicrosoft.com to the AWS IAM Identity Center enterprise application using the same process. After completing the identity provider and provisioning configuration, I verified the SAML sign-in integration using CamphorCust@CamphorCustomer1.onmicrosoft.com. The AWS access portal opened successfully and displayed the AWS account access application. 
+- I also assigned `CamphorCust@CamphorCustomer1.onmicrosoft.com` to the AWS IAM Identity Center enterprise application using the same process. After completing the identity provider and provisioning configuration, I verified the SAML sign-in integration using CamphorCust@CamphorCustomer1.onmicrosoft.com. The AWS access portal opened successfully and displayed the AWS account access application. 
 
 <p align="center">
   <img src="https://github.com/NgethaWachira/Building-a-Simulated-MSSP-Environment/blob/e1e2917334aa557255f57e044912d902ef001c6c/Images/167.png" width="700" />
@@ -878,9 +878,15 @@ Hardened a Microsoft 365 tenant end to end across Entra ID (PIM, Conditional Acc
   <img src="https://github.com/NgethaWachira/Building-a-Simulated-MSSP-Environment/blob/e1e2917334aa557255f57e044912d902ef001c6c/Images/169.png" width="700" />
 </p>
 
+### Creating the Windows Secure Score Quick-Win Policy
+- Building on the existing Intune security configuration, which included WIN-ASR-Baseline, WIN-BitLocker-Baseline, and WIN-Defender-AV-Baseline, I added another Settings Catalog policy named WIN-SecureScore-QuickWins. 
 
+- I configured it for Windows 10 and later and included four security improvements: enabling Local Security Authority (LSA) protection, automatically denying elevation requests from standard users, disabling administrator account enumeration during elevation, and turning off AutoPlay for all drives. I assigned the policy to the existing Intune-Compliance-Windows-Pilot group.
 
-
+<p align="center">
+  <img src="https://github.com/NgethaWachira/Building-a-Simulated-MSSP-Environment/blob/7d32114c44491075de6e1b6eaf1c4f9d9c881b8e/Images/170.png" width="385" />
+  <img src="https://github.com/NgethaWachira/Building-a-Simulated-MSSP-Environment/blob/7d32114c44491075de6e1b6eaf1c4f9d9c881b8e/Images/171.png" width="315" />
+</p>
 
 
 
