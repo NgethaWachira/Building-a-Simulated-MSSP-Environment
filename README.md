@@ -923,5 +923,83 @@ Hardened a Microsoft 365 tenant end to end across Entra ID (PIM, Conditional Acc
   <img src="https://github.com/NgethaWachira/Building-a-Simulated-MSSP-Environment/blob/c03a7a75501b21acc23cb3addaea181a603818bc/Images/176.png" width="700" />
 </p>
 
+### Enabling Windows Update Reporting
+- With LAPS and local administrator restrictions in place, i moved to endpoint patch management. I first enabled Windows update reporting under Intune > Tenant administration > Connectors and tokens > Windows data by turning on the diagnostic data feature and saving the configuration. This enabled Intune to collect the Windows update information needed to monitor patch status and generate update compliance reports.
+
+<p align="center">
+  <img src="https://github.com/NgethaWachira/Building-a-Simulated-MSSP-Environment/blob/bcfd86b366858619ba37747f7b2b1d9aec87339f/Images/178.png" width="700" />
+</p>
+
+### Creating the Windows Update Ring
+- Created an Intune update policy called WIN-UpdateRing-Pilot and assigned it to the Intune-Compliance-Windows-Pilot group. Configured devices to automatically download and install Windows, Microsoft, and driver updates without delays or the option to pause them. Set updates and restarts to happen outside working hours. 
+
+- Also configured deadlines so that quality updates must be installed within 3 days and feature updates within 7 days, with an extra 1-day grace period before automatic restart. Disabled the Windows 11 upgrade because the device did not meet the required hardware specifications.
+
+<p align="center">
+  <img src="https://github.com/NgethaWachira/Building-a-Simulated-MSSP-Environment/blob/bcfd86b366858619ba37747f7b2b1d9aec87339f/Images/179.png" width="700" />
+</p>
+
+### Creating the SharePoint and OneDrive Sharing Detection Rule
+- Created a Microsoft Sentinel Near-Real-Time (NRT) analytics rule named SharePoint/OneDrive sharing activity to monitor file-sharing activities. Configured it to detect sharing invitations, links, and anonymous sharing across SharePoint and OneDrive.
+
+<p align="center">
+  <img src="https://github.com/NgethaWachira/Building-a-Simulated-MSSP-Environment/blob/bcfd86b366858619ba37747f7b2b1d9aec87339f/Images/179.png" width="700" />
+</p>
+
+### Verifying SharePoint and OneDrive Sharing Restrictions
+- Reviewed OneDrive sharing settings using the analyst2 account before testing the detection rule. Confirmed that anonymous (Anyone) sharing links were disabled, with sharing restricted to people in the organization, existing users, or specifically selected individuals. Verified that the default permission was Can view and that link expiration was available.
+
+<p align="center">
+  <img src="https://github.com/NgethaWachira/Building-a-Simulated-MSSP-Environment/blob/bcfd86b366858619ba37747f7b2b1d9aec87339f/Images/181.png" width="700" />
+</p>
+
+### Testing External Sharing and Validating the Controls
+- Created a Word document named Sharing test in OneDrive to test the external-sharing restrictions. Confirmed that sharing with a new Gmail address was blocked because only existing guest users were allowed. Successfully tested sharing with an approved existing guest account using Can view permission.
+
+<p align="center">
+  <img src="https://github.com/NgethaWachira/Building-a-Simulated-MSSP-Environment/blob/bcfd86b366858619ba37747f7b2b1d9aec87339f/Images/182.png" width="700" />
+</p>
+
+### Creating a Dynamic Group for Guest Access Reviews
+- To prepare for regular reviews of external user access, i created a dynamic security group in Microsoft Entra ID named All-Guest-Users. I configured it with Dynamic User membership and used the rule (user.userType -eq "Guest") so that all guest accounts would automatically become members. 
+
+<p align="center">
+  <img src="https://github.com/NgethaWachira/Building-a-Simulated-MSSP-Environment/blob/bcfd86b366858619ba37747f7b2b1d9aec87339f/Images/183.png" width="700" />
+  <br>
+  <img src="https://github.com/NgethaWachira/Building-a-Simulated-MSSP-Environment/blob/bcfd86b366858619ba37747f7b2b1d9aec87339f/Images/184.png" width="700" />
+</p>
+
+### Configuring the Guest Access Review
+- Created a quarterly guest access review called Quarterly guest access review in Microsoft Entra ID to regularly check who should still have access to the All-Guest-Users group.
+
+- Assigned CamphorCust as the main reviewer and analyst2 as the backup. Set the review to happen every three months, with three days allowed to complete it. Also enabled automatic application of review decisions, required reviewers to explain their decisions, and added a feature to highlight guest users who had not signed in for 30 days.
+
+<p align="center">
+  <img src="https://github.com/NgethaWachira/Building-a-Simulated-MSSP-Environment/blob/bcfd86b366858619ba37747f7b2b1d9aec87339f/Images/186.png" width="700" />
+</p>
+
+### Reviewing Guest Accounts
+- CamphorCust was able to access My Access → Access reviews to review guest accounts and choose Approve or Deny, providing a reason for each decision. For example, the mssptriagelabke account could be approved because it was needed for SOC automation testing, while unused guest accounts could be denied. 
+
+<p align="center">
+  <img src="https://github.com/NgethaWachira/Building-a-Simulated-MSSP-Environment/blob/bcfd86b366858619ba37747f7b2b1d9aec87339f/Images/187.png" width="700" />
+  <br>
+  <img src="https://github.com/NgethaWachira/Building-a-Simulated-MSSP-Environment/blob/bcfd86b366858619ba37747f7b2b1d9aec87339f/Images/188.png" width="700" />
+</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
