@@ -752,6 +752,72 @@ Hardened a Microsoft 365 tenant end to end across Entra ID (PIM, Conditional Acc
   <img src="https://github.com/NgethaWachira/Building-a-Simulated-MSSP-Environment/blob/0d3ff0898f82236b57a31f30d973ec1a8835cc75/Images/150.png" width="700" />
 </p>
 
+###  Microsoft Entra ID single sign-on (SSO) through SAML, alongside automatic user provisioning
+- AWS IAM Identity Center stood out as a suitable demonstration option because it supports SAML and SCIM integration without an additional service charge, making it useful for demonstrating centralized identity management between AWS and Microsoft Entra ID.
+
+### Configuring AWS Account
+- I began preparing the AWS environment for integration with Microsoft Entra ID. I upgraded the AWS plan to the paid pay-as-you-go option and selected the recommended $20 monthly spending limit during the initial upgrade process. This provided a spending safeguard while the account was still operating in its simplified mode.
+
+- Next step was to activate AWS advanced features using a dedicated management account email and team name to enable IAM Identity Center and support Entra ID integration. This required careful planning because switching to an external identity provider is irreversible and disables Builder ID as the team's sign-in method.
+
+<p align="center">
+  <img src="https://github.com/NgethaWachira/Building-a-Simulated-MSSP-Environment/blob/393964ad8af608d6180859e7483ad41238027eaa/Images/151.png" width="700" />
+</p>
+
+### Establishing Initial AWS Security and Cost Controls
+- The initial security steps included securing the AWS management account root user with a YubiKey as a passkey. I also identified a zero-spend budget as the immediate cost-monitoring control to configure after advanced feature activation, since the initial spending limit would no longer apply. These controls established the foundation for the next phase.
+
+<p align="center">
+  <img src="https://github.com/NgethaWachira/Building-a-Simulated-MSSP-Environment/blob/393964ad8af608d6180859e7483ad41238027eaa/Images/152.png" width="700" />
+  <br>
+  <img src="https://github.com/NgethaWachira/Building-a-Simulated-MSSP-Environment/blob/393964ad8af608d6180859e7483ad41238027eaa/Images/153.png" width="700" />
+</p>
+
+### Reviewing the AWS IAM Identity Center Configuration
+- Reviewed the AWS IAM Identity Center settings and confirmed the instance details, including its ID, organization, region, creation date, and registered delegated administrator. Verified that AWS Builder ID was the current identity source. Initiated the migration to Microsoft Entra ID by selecting Change identity source.
+
+<p align="center">
+  <img src="https://github.com/NgethaWachira/Building-a-Simulated-MSSP-Environment/blob/393964ad8af608d6180859e7483ad41238027eaa/Images/155.png" width="700" />
+</p>
+
+### Selecting Microsoft Entra ID as the External Identity Provider
+- Selected External identity provider as the new identity source for AWS IAM Identity Center to prepare for Microsoft Entra ID integration. Reviewed AWS’s warning that the change is permanent and cannot be reversed to AWS Builder ID before proceeding.
+
+<p align="center">
+  <img src="https://github.com/NgethaWachira/Building-a-Simulated-MSSP-Environment/blob/393964ad8af608d6180859e7483ad41238027eaa/Images/156.png" width="700" />
+</p>
+
+### Collecting AWS Service Provider Metadata
+- Accessed the AWS service provider metadata under the IPv4-only tab and downloaded the metadata file containing the required SAML configuration details, including the AWS access portal URL, Assertion Consumer Service (ACS) URL, and issuer URL. The downloaded file will be used to configure the AWS IAM Identity Center enterprise application in Microsoft Entra ID.
+
+<p align="center">
+  <img src="https://github.com/NgethaWachira/Building-a-Simulated-MSSP-Environment/blob/393964ad8af608d6180859e7483ad41238027eaa/Images/157.png" width="700" />
+</p>
+
+### Configuring SAML Authentication in Microsoft Entra ID
+- Uploaded the AWS service provider metadata file to configure SAML authentication in the Microsoft Entra ID enterprise application. Reviewed the Basic SAML Configuration, including the identifier, reply URL, and claims mapping for givenname, surname, mail, and UPN. Also verified that the token-signing certificate was active and valid. I also downloaded the Federation Metadata XML from Entra for use in the AWS configuration.
+
+<p align="center">
+  <img src="https://github.com/NgethaWachira/Building-a-Simulated-MSSP-Environment/blob/d9c6f151337792fc3761a1c032cc4d1a7e3072f6/Images/158a.png" width="700" />
+</p>
+
+### Completing the AWS Identity Source Change
+- Uploaded the Microsoft Entra Federation Metadata XML file (entra-metadata.xml) to AWS IAM Identity Center and confirmed the identity source change by typing ACCEPT. AWS confirmed that existing users, groups, permission sets, and assignments would be retained. Noted that users must have matching usernames in Microsoft Entra ID to sign in and that MFA enforcement would now be managed by Microsoft Entra ID instead of AWS.
+
+<p align="center">
+  <img src="https://github.com/NgethaWachira/Building-a-Simulated-MSSP-Environment/blob/d9c6f151337792fc3761a1c032cc4d1a7e3072f6/Images/159.png" width="700" />
+</p>
+
+### Verifying the External Identity Provider Configuration
+- Verified that AWS IAM Identity Center successfully switched to External IdP, with SAML 2.0 configured for authentication and SCIM for user provisioning. Selected Actions > Manage provisioning to begin SCIM setup and generated the SCIM endpoint URL and access token required to configure automated provisioning in the Microsoft Entra ID enterprise application.
+
+<p align="center">
+  <img src="https://github.com/NgethaWachira/Building-a-Simulated-MSSP-Environment/blob/d9c6f151337792fc3761a1c032cc4d1a7e3072f6/Images/160.png" width="700" />
+</p>
+
+
+
+
 
 
 
