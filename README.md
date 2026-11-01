@@ -888,19 +888,40 @@ Hardened a Microsoft 365 tenant end to end across Entra ID (PIM, Conditional Acc
   <img src="https://github.com/NgethaWachira/Building-a-Simulated-MSSP-Environment/blob/7d32114c44491075de6e1b6eaf1c4f9d9c881b8e/Images/171.png" width="315" />
 </p>
 
+### Creating the Firewall Policy to Block mshta.exe
+- Created a Windows Firewall policy named WIN-Firewall-Block-mshta in Intune to strengthen endpoint security. Added two enabled outbound blocking rules targeting both the 64-bit and 32-bit versions of mshta.exe. Applied the rules to Domain, Private, and Public network profiles to block all outbound network connections from these executables and assigned the policy to Intune-Compliance-Windows-Pilot.
 
+<p align="center">
+  <img src="https://github.com/NgethaWachira/Building-a-Simulated-MSSP-Environment/blob/c03a7a75501b21acc23cb3addaea181a603818bc/Images/172.png" width="700" />
+</p>
 
+### Configuring LAPS for the Local Administrator Account
+- I configured Windows Local Administrator Password Solution (LAPS) to manage the local administrator account on DESKTOP-LRPASIE. I identified that the device had two separate accounts: .\Kings, a local Windows account, and analyst2 (Homer Simpson), an Entra ID account. 
 
+- Since LAPS manages local accounts, I selected Kings as the account whose password would be automatically rotated and backed up to Microsoft Entra ID. This provided a controlled way to retrieve the local administrator password when maintenance was required.
 
+<p align="center">
+  <img src="https://github.com/NgethaWachira/Building-a-Simulated-MSSP-Environment/blob/c03a7a75501b21acc23cb3addaea181a603818bc/Images/173.png" width="700" />
+</p>
 
+### Removing Everyday User Administrative Privileges
+- After confirming that LAPS was working and that I could sign in using .\Kings with its managed password, i created an Intune Account Protection policy named WIN-Local-Admins-Baseline. I configured the local Administrators group using Add (Replace) and included only Kings and the built-in Administrator account. I assigned the policy to Intune-Compliance-Windows-Pilot. 
 
+<p align="center">
+  <img src="https://github.com/NgethaWachira/Building-a-Simulated-MSSP-Environment/blob/c03a7a75501b21acc23cb3addaea181a603818bc/Images/177.png" width="700" />
+</p>
 
+- This replaced the existing local Administrators group membership and removed analyst2 from local administrator privileges while retaining the managed local account for administrative tasks. I verified the membership using the elevated PowerShell command net localgroup administrators.
 
+<p align="center">
+  <img src="https://github.com/NgethaWachira/Building-a-Simulated-MSSP-Environment/blob/c03a7a75501b21acc23cb3addaea181a603818bc/Images/175.png" width="700" />
+</p>
 
+- Verified that Microsoft Entra LAPS was successfully managing the local administrator account Kings on DESKTOP-LRPASIE. Also opened the password recovery panel in Entra ID and confirmed that the managed password could be retrieved, with the recovery action recorded for auditing.
 
-
-
-
+<p align="center">
+  <img src="https://github.com/NgethaWachira/Building-a-Simulated-MSSP-Environment/blob/c03a7a75501b21acc23cb3addaea181a603818bc/Images/176.png" width="700" />
+</p>
 
 
 
