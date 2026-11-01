@@ -815,6 +815,79 @@ Hardened a Microsoft 365 tenant end to end across Entra ID (PIM, Conditional Acc
   <img src="https://github.com/NgethaWachira/Building-a-Simulated-MSSP-Environment/blob/d9c6f151337792fc3761a1c032cc4d1a7e3072f6/Images/160.png" width="700" />
 </p>
 
+### Enabling SCIM Provisioning in AWS
+- Enabled automatic SCIM provisioning in AWS IAM Identity Center and confirmed that the connection addresses (IPv4 and dual-stack) were available. Generated an active access token, which acts as a secure key allowing Microsoft Entra ID to communicate with AWS. The endpoint and access token were ready to set up automatic user and group creation and updates between Microsoft Entra ID and AWS.
+
+<p align="center">
+  <img src="https://github.com/NgethaWachira/Building-a-Simulated-MSSP-Environment/blob/e1e2917334aa557255f57e044912d902ef001c6c/Images/161.png" width="700" />
+</p>
+
+### Connecting AWS SCIM Provisioning to Microsoft Entra ID
+- Configured SCIM provisioning in the Microsoft Entra ID enterprise application by entering the AWS IPv4 SCIM endpoint as the Tenant URL and the active access token as the Secret Token. Selected Test Connection to verify communication between Entra ID and AWS, then selected Create to save the provisioning configuration.
+
+<p align="center">
+  <img src="https://github.com/NgethaWachira/Building-a-Simulated-MSSP-Environment/blob/e1e2917334aa557255f57e044912d902ef001c6c/Images/162.png" width="700" />
+</p>
+
+### Assigning Users to the AWS Enterprise Application
+- After configuring the SCIM connection, I opened the Users and groups section of the AWS IAM Identity Center enterprise application in Microsoft Entra ID. I assigned the two existing lab analyst accounts, Homer Simpson (analyst2) and Tom Jerry (analyst1), directly to the application. This ensured that both users were included in the assigned scope for automatic provisioning to AWS.
+
+<p align="center">
+  <img src="https://github.com/NgethaWachira/Building-a-Simulated-MSSP-Environment/blob/e1e2917334aa557255f57e044912d902ef001c6c/Images/163.png" width="700" />
+</p>
+
+### Testing On-Demand Provisioning for Tom Jerry
+- With Tom Jerry assigned to the AWS enterprise application, I used Provision on demand in Microsoft Entra ID to test the SCIM integration. All four provisioning stages—Import, Scope, Match, and Action—completed successfully, and the account analyst1@CamphorCustomer1.onmicrosoft.com was created in AWS IAM Identity Center.
+
+<p align="center">
+  <img src="https://github.com/NgethaWachira/Building-a-Simulated-MSSP-Environment/blob/e1e2917334aa557255f57e044912d902ef001c6c/Images/164.png" width="700" />
+</p>
+
+- I also verified the default attribute mappings: userName was mapped to UPN, email to mail, externalId to the Entra object ID (33b9817d-...), and active to Not(IsSoftDeleted). This confirmed that user provisioning was working as expected.
+
+<p align="center">
+  <img src="https://github.com/NgethaWachira/Building-a-Simulated-MSSP-Environment/blob/e1e2917334aa557255f57e044912d902ef001c6c/Images/165.png" width="700" />
+</p>
+
+### Verifying Provisioned Users in AWS IAM Identity Center
+- I reviewed the Users section in AWS IAM Identity Center and confirmed that both lab analyst accounts had been created successfully through SCIM provisioning: analyst1@... (Tom Jerry) and analyst2@... (Homer Simpson). I also identified a third account, mesainenterprisesltd@gmail.com (camphor-lab), which was listed as Manually created. 
+
+- This was an existing account retained from the earlier AWS Builder ID configuration, rather than an account created through Entra provisioning.
+
+<p align="center">
+  <img src="https://github.com/NgethaWachira/Building-a-Simulated-MSSP-Environment/blob/e1e2917334aa557255f57e044912d902ef001c6c/Images/166.png" width="700" />
+</p>
+
+### Verifying Microsoft Entra ID Sign-In to AWS
+- I also assigned CamphorCust@CamphorCustomer1.onmicrosoft.com to the AWS IAM Identity Center enterprise application using the same process. After completing the identity provider and provisioning configuration, I verified the SAML sign-in integration using CamphorCust@CamphorCustomer1.onmicrosoft.com. The AWS access portal opened successfully and displayed the AWS account access application. 
+
+<p align="center">
+  <img src="https://github.com/NgethaWachira/Building-a-Simulated-MSSP-Environment/blob/e1e2917334aa557255f57e044912d902ef001c6c/Images/167.png" width="700" />
+</p>
+
+- I also checked the Microsoft Entra My Apps dashboard for Camphor Cust and confirmed that the AWS IAM Identity Center application tile was available. This verified that the AWS application was accessible through the Entra identity environment.
+
+<p align="center">
+  <img src="https://github.com/NgethaWachira/Building-a-Simulated-MSSP-Environment/blob/e1e2917334aa557255f57e044912d902ef001c6c/Images/168.png" width="700" />
+</p>
+
+### Creating the AWS Read-Only IAM Role
+- To prepare read-only access for the SOC analysts, i created the IAM role ReadOnlyAccess in AWS account 811405442773 and attached the AWS-managed ReadOnlyAccess policy. I configured the role with a maximum session duration of one hour to limit how long an assumed session could remain active.
+
+<p align="center">
+  <img src="https://github.com/NgethaWachira/Building-a-Simulated-MSSP-Environment/blob/e1e2917334aa557255f57e044912d902ef001c6c/Images/169.png" width="700" />
+</p>
+
+
+
+
+
+
+
+
+
+
+
 
 
 
